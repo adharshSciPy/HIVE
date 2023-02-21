@@ -16,6 +16,10 @@ function ClassShedule() {
     setValue(newValue);
   };
 
+  const handleSubmit = () => {
+    console.log("clicked")
+  }
+
 
   return (
     <>
@@ -32,25 +36,25 @@ function ClassShedule() {
           <CardContent>
             <Typography variant="h6" color="initial" sx={{ mb: 3 }}>Schedule class</Typography>
 
-            <Box component="form" noValidate sx={{ mt: 1 }}>
+            <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleSubmit}>
 
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DesktopDatePicker
-                    label="Date"
-                    inputFormat="DD/MM/YYYY"
-                    value={value}
-                    onChange={handleDate}
-                    renderInput={(params) => <TextField {...params} />}
-                    size='small'
-                    sx={{ minWidth: '100%', margin: '1rem 0' }}
-                  />
-                </LocalizationProvider>
+                <DesktopDatePicker
+                  label="Date"
+                  inputFormat="DD/MM/YYYY"
+                  value={value}
+                  onChange={handleDate}
+                  renderInput={(params) => <TextField {...params} name="date" size='small' fullWidth />}
+                  size='small'
+                  sx={{ minWidth: '100%', margin: '1rem 0' }}
+                />
+              </LocalizationProvider>
 
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                id="batch"
+                id="title"
                 label="Title"
                 name="title"
                 autoFocus
@@ -58,6 +62,40 @@ function ClassShedule() {
               />
 
               <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="batch"
+                label="Time"
+                name="time"
+                autoFocus
+                size='small'
+              />
+
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="batch"  
+                label=""
+                name="title"
+                autoFocus
+                size='small'
+              />
+
+              <Button
+                variant="contained"
+                component="label"
+              >
+                Upload File
+                <input
+                  type="file"
+                  hidden
+                  name='pdf'
+                />
+              </Button>
+
+              {/* <TextField
                 variant="outlined"
                 select
                 label="Batch"
@@ -71,7 +109,7 @@ function ClassShedule() {
                 <MenuItem value='d'>D</MenuItem>
                 <MenuItem value='e'>E</MenuItem>
                 <MenuItem value='f'>F</MenuItem>
-              </TextField>
+              </TextField> */}
 
 
 

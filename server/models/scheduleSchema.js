@@ -7,11 +7,6 @@ const ScheduleSchema = new Schema({
     required: true,
   },
 
-  batchId: {
-    type: String,
-    required: true,
-  },
-
   time: {
     type: String,
     required: true,
@@ -21,10 +16,16 @@ const ScheduleSchema = new Schema({
     type: Date,
   },
 
-  pdf: {
+  pdfName: {
     type: String,
-    data: Buffer,
   },
+
+
+  status: {
+    type: Boolean,
+  },
+
+
 
   createdAt: { type: Date, default: Date.now },
 });
