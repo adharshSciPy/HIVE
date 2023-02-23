@@ -46,7 +46,7 @@ export default function SignIn() {
         toast.success(res.data.message, {
           position: toast.POSITION.TOP_CENTER,
         });
-        const {token, user} = res.data
+        const { token, user } = res.data
         Cookie.set("Token", token)
         console.log(user)
         // switching routers
@@ -85,11 +85,9 @@ export default function SignIn() {
       .catch((err) => {
         // console.log(err.response.data.message)
         toast.error(err.response.data.message, {
-          position: toast.POSITION.TOP_CENTER,
+          
         });
       })
-
-
   };
 
 

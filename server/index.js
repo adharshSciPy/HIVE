@@ -5,6 +5,7 @@ const connect = require('./mongodb/config.js')
 const userRouter = require('./routers/UserRouter.js')
 const publicRouter = require('./routers/PublicRouter.js')
 const cors = require('cors')
+const bodyParser = require('body-parser')
 
 // mongoose connection
 connect()
@@ -12,6 +13,7 @@ connect()
 
 // middlewares
 app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 app.get('/', (req, res)=> {
     console.log('backend ready')

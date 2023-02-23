@@ -4,16 +4,16 @@ const Schema = mongoose.Schema;
 const ScheduleSchema = new Schema({
   title: {
     type: String,
-    required: true,
+    // required: true,
   },
 
   time: {
     type: String,
-    required: true,
+    // required: true,
   },
 
   date: {
-    type: Date,
+    type: String,
   },
 
   pdfName: {
@@ -24,7 +24,6 @@ const ScheduleSchema = new Schema({
   status: {
     type: Boolean,
   },
-
 
 
   createdAt: { type: Date, default: Date.now },

@@ -1,26 +1,81 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
+import axios from 'axios'
+import uuid from 'react-uuid'
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
+import Box from '@mui/material/Box';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
+import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 
-const columns = [
-   { feld: 'id', headerName: 'Id', width: 70},
-   { field: 'date', headerName: 'Date', width: 130 },
-   { field: 'batch', headerName: 'Batch', width: 70 },
-   { field: 'title', headerName: 'Title', width: 130 },
-];
 
-const rows = [
-   { id: 1, batch: 'A', title: 'Science', date: '03-02-2023' },
-   { id: 2, batch: 'B', title: 'Maths', date: '04 - 02 - 2023' },
-   { id: 3, batch: 'E', title: 'Chemistry', date: '04 - 02 - 2023' },
-   { id: 4, batch: 'D', title: 'Physics', date: '01 - 02 - 2023' },
-   { id: 5, batch: 'A', title: 'Science', date: '02 - 02 - 2023' },
-   { id: 6, batch: 'C', title: 'Maths', date: '15 - 02 - 2023' },
-   { id: 7, batch: 'A', title: 'Physics', date: '04 - 02 - 2023' },
-   { id: 8, batch: 'E', title: 'Maths', date: '03 - 02 - 2023' },
-   { id: 9, batch: 'C', title: 'Science', date: '06 - 02 - 2023 '},
-];
 
-export default function DataTable() {
+export default function DataTable({ handleSubmit }) {
+
+   const navigate = useNavigate()
+   // defining coloumns
+   const columns = [
+      { field: '_id', headerName: 'Id', width: 300, hideable: false, hide: true },
+      { field: 'date', headerName: 'Date', width: 130 },
+      { field: 'title', headerName: 'Title', width: 300 },
+      {
+         field: 'action',
+         width: 190,
+         headerName: 'Action',
+         sortable: false,
+         renderCell: (params) => {
+            const onClick = (e) => {
+               e.stopPropagation(); // don't select this row after clicking
+
+               const api: GridApi = params.api;
+               const thisRow: Record<string, GridCellValue> = {};
+
+               api
+                  .getAllColumns()
+                  .filter((c) => c.field !== '_check_' && !!c)
+                  .forEach(
+                     (c) => (thisRow[c.field] = params.getValue(params.id, c.field)),
+                  );
+               alert(JSON.stringify(thisRow))
+
+               // navigate(`${item._id}`)
+            };
+
+            return <Box
+               sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  '& > *': {
+                     m: 1,
+                  },
+               }}
+            >
+               <ButtonGroup size="small" aria-label="small button group">
+                  <Button color="error"><HighlightOffRoundedIcon /></Button>
+                  <Button color="success"><CheckCircleOutlineRoundedIcon /></Button>
+               </ButtonGroup>
+            </Box>
+         },
+      },
+   ];
+
+
+
+   const [rows, setRows] = React.useState([])
+   React.useEffect(() => {
+
+      axios.get('http://localhost:5000/public/getScheduledClass')
+         .then((res) => {
+            setRows(res.data.ScheduledClass)
+            console.log(res.data.ScheduledClass)
+         })
+         .catch((err) => {
+            console.error(err)
+         })
+   }, [handleSubmit])
+
    return (
       <div style={{ height: 400, width: '100%' }}>
          <DataGrid
@@ -28,7 +83,11 @@ export default function DataTable() {
             columns={columns}
             pageSize={5}
             rowsPerPageOptions={[5]}
+            getRowId={(row: any) => uuid()}
+            disableSelectionOnClick
+            disableColumnMenu
+            disableColumnSelector
          />
       </div>
-   ); 
+   );
 }

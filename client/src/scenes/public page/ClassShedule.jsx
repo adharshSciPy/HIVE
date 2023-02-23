@@ -1,23 +1,54 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import { Button, CardContent, Grid, MenuItem, Typography } from '@mui/material';
+import { Button, CardContent, FormLabel, Grid, MenuItem, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Table from './Table'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import dayjs from 'dayjs';
+import axios from 'axios';
+import { toast } from 'react-toastify'
 
 
 function ClassShedule() {
-  const [value, setValue] = React.useState(dayjs('03-02-2023'));
+  const [title, setTitle] = React.useState('');
+  const [time, setTime] = React.useState('');
+  const [file, setFile] = React.useState(null);
+  const [value, setValue] = React.useState(dayjs('03-02-2023'))
   const handleDate = (newValue) => {
     setValue(newValue);
   };
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  }
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    const data = new FormData(event.currentTarget);
 
-  const handleSubmit = () => {
-    console.log("clicked")
+    console.log(data)
+
+    axios.post('http://localhost:5000/public/scheduleClass', {
+      title: data.get('title'),
+      time: data.get('time'),
+      date: data.get('date'),
+      // pdf: data.get('pdf'),
+
+    })
+      .then((res) => {
+        toast.success(res.data.message, {
+          position: toast.POSITION.TOP_CENTER,
+        })
+        setTimeout(() => {
+          setTime('')
+          setTitle('')
+        }, 400)
+
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   }
 
 
@@ -30,72 +61,68 @@ function ClassShedule() {
         direction={{ sm: 'row', md: 'column', lg: 'column', lx: 'column' }}
         alignItems="center"
         justifyContent="space-around"
-        sx={{ pt: 1, p: 5 }}
+        sx={{ p: 2 }}
       >
-        <Card sx={{ maxWidth: 300, p: 1, backgroundColor: '#E7EBF0' }}>
+        <Card sx={{ maxWidth: 300, minHeight: 450, p: 1, backgroundColor: '#E7EBF0' }}>
           <CardContent>
             <Typography variant="h6" color="initial" sx={{ mb: 3 }}>Schedule class</Typography>
 
-            <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleSubmit}>
+            <Box sx={{ mt: 1 }}>
+              <form encType='form-data/json' onSubmit={handleSubmit}>
 
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DesktopDatePicker
-                  label="Date"
-                  inputFormat="DD/MM/YYYY"
-                  value={value}
-                  onChange={handleDate}
-                  renderInput={(params) => <TextField {...params} name="date" size='small' fullWidth />}
+
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DesktopDatePicker
+                    label="Date"
+                    inputFormat="DD/MM/YYYY"
+                    value={value}
+                    onChange={handleDate}
+                    renderInput={(params) => <TextField {...params} name="date" size='small' sx={{ minWidth: '100%', margin: '.5rem 0' }} fullWidth />}
+                    size='small'
+
+                  />
+                </LocalizationProvider>
+
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="title"
+                  label="Title"
+                  name="title"
+                  autoFocus
                   size='small'
-                  sx={{ minWidth: '100%', margin: '1rem 0' }}
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  sx={{ minWidth: '100%', margin: '.5rem 0' }}
                 />
-              </LocalizationProvider>
 
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="title"
-                label="Title"
-                name="title"
-                autoFocus
-                size='small'
-              />
-
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="batch"
-                label="Time"
-                name="time"
-                autoFocus
-                size='small'
-              />
-
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="batch"  
-                label=""
-                name="title"
-                autoFocus
-                size='small'
-              />
-
-              <Button
-                variant="contained"
-                component="label"
-              >
-                Upload File
-                <input
-                  type="file"
-                  hidden
-                  name='pdf'
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="time"
+                  label="Time"
+                  name="time"
+                  autoFocus
+                  size='small'
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  sx={{ minWidth: '100%', margin: '.5rem 0' }}
                 />
-              </Button>
 
-              {/* <TextField
+                <Button component="label" margin="normal" fullWidth size="small" variant='outlined' sx={{ minWidth: '100%', margin: '.5rem 0' }}>Upload PDF
+                  <input
+                    type="file"
+                    name='pdf'
+                    hidden
+                    onChange={handleFileChange}
+                  />
+
+                </Button>
+
+
+                {/* <TextField
                 variant="outlined"
                 select
                 label="Batch"
@@ -113,22 +140,24 @@ function ClassShedule() {
 
 
 
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Login
-              </Button>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 7, mb: -1 }}
+
+                >
+                  Schedule
+                </Button>
+              </form>
             </Box>
           </CardContent>
         </Card>
 
-        <Card sx={{ minWidth: 500, p: 1, backgroundColor: '#E7EBF0' }}>
+        <Card sx={{ minWidth: 700, maxHeight: 450, p: 1, backgroundColor: '#E7EBF0' }}>
           <CardContent>
-            <Typography variant="subtitle1" color="initial">Class History</Typography>
-            <Table />
+            <Typography variant="subtitle1" color="initial">Scheduled Classes</Typography>
+            <Table handleSubmit={handleSubmit} />
           </CardContent>
         </Card>
       </Box>

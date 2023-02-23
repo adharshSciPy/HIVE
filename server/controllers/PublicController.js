@@ -3,17 +3,21 @@ const fs = require('fs')
 
 module.exports = {
   scheduleClass: async (req, res, next) => {
-    const { title, batchId, date, time, pdf } = req.body;
-    const { filename } = req.file;
-    res.status(200).json({ message: 'Posted Succesfully' })
+    const { title, date, time } = req.body;
+    // const {filename} = req.file;
     try {
       const scheduleData = await ScheduleSchema.create({
         title,
         time,
         date,
-        pdfName: filename,
+        pdfName: 'Demo Pdf',
         status: true
       })
+      if (!scheduleData) {
+        res.status(400).json({ message: 'Posting Failded' })
+      }
+      console.log(scheduleData)
+      res.status(200).json({ message: 'Posted Succesfully' })
     }
     catch (err) {
       console.log(err)
@@ -21,15 +25,17 @@ module.exports = {
     }
   },
 
+
+
   // api to get the scheduled class details in student
   getScheduledClass: async (req, res) => {
     const ScheduledClass = await ScheduleSchema.find({ status: true })
+    // console.log(ScheduledClass)
 
     try {
       if (!ScheduledClass) {
         res.status(400).json({ message: 'No Classes Scheduled' })
       }
-      console.log(ScheduledClass)
       res.status(200).json({ message: "Classes Scheduled", ScheduledClass })
     }
 
@@ -37,6 +43,7 @@ module.exports = {
       res.status(500).json({ message: 'Server Error' })
     }
   },
+
 
 
   getClassHistory: async (req, res) => {
@@ -56,6 +63,7 @@ module.exports = {
   },
 
 
+  
   // api to download pdf
   downloadPdf: async (req, res) => {
     const { fileName } = req.body
