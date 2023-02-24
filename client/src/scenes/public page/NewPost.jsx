@@ -14,27 +14,59 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { MenuItem } from '@mui/material';
 import { setRole } from '../../store/auth';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import dayjs from 'dayjs';
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 
 const theme = createTheme();
 
 
 export default function NewPost() {
+  const [title, setTitle] = React.useState('')
+  const [price, setPrice] = React.useState('')
+  const [postType, setPostType] = React.useState('')
+  const [date, setDate] = React.useState(dayjs('03-02-2023'))
+
+
+  const handleDate = (newValue) => {
+    setDate(newValue);
+  };
+
+
+  const handleChange = (event) => {
+    setPostType(event.target.value)
+  }
+
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+
+    axios.post('http://localhost:5000/public/post', {
       title: data.get('title'),
-      password: data.get('password'),
-    });
+      postType: data.get('post-type'),
+      price: data.get('price'),
+      date: data.get('date')
+    })
+      .then((res) => {
+        toast.success(res.data.message, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        setTitle('')
+        setPrice('')
+        setPostType('')
+      })
+      .catch((err) => {
+        toast.error(err.message, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      })
   };
-
-
-  const [role, setrole] = React.useState('')
-  const handleChange = (event) => {
-    setRole(event.target.value)
-  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -61,19 +93,24 @@ export default function NewPost() {
               name="title"
               autoFocus
               size='small'
+              value={title}
+              onChange={(e)=> {setTitle(e.target.value)}}
             />
             <TextField
-              value={role}
               variant="outlined"
               select
-              label="Post Type"
+              maxWidth
+              value={postType}
+              label="Post-Type"
               name='post-type'
               sx={{ width: '100%', mt: 1 }}
-              onChange={handleChange}
               size="small"
+              onChange={handleChange}
             >
-              <MenuItem value='student'>Student</MenuItem>
-              <MenuItem value='public'>Public</MenuItem>
+              <MenuItem value='jobfair'>Job Fair</MenuItem>
+              <MenuItem value='webinar'>Webinar</MenuItem>
+              <MenuItem value='internship'>Internship</MenuItem>
+              <MenuItem value='placement'>Placement</MenuItem>
             </TextField>
             <TextField
               margin="normal"
@@ -84,17 +121,20 @@ export default function NewPost() {
               type="text"
               id="price"
               size='small'
+              value={price}
+              onChange={(e)=> {setPrice(e.target.value)}}
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="date"
-              label="Date"
-              name="date"
-              autoFocus
-              size='small'
-            />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DesktopDatePicker
+                label="Date"
+                inputFormat="DD/MM/YYYY"
+                value={date}
+                onChange={handleDate}
+                renderInput={(params) => <TextField {...params} name="date" size='small' sx={{ minWidth: '100%', margin: '.5rem 0' }} fullWidth />}
+                size='small'
+
+              />
+            </LocalizationProvider>
             <Button
               type="submit"
               fullWidth

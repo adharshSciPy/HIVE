@@ -4,12 +4,12 @@ const Schema = mongoose.Schema;
 const ScheduleSchema = new Schema({
   title: {
     type: String,
-    // required: true,
+    required: true,
   },
 
   time: {
     type: String,
-    // required: true,
+    required: true,
   },
 
   date: {

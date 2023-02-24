@@ -12,9 +12,8 @@ import { toast } from "react-toastify";
 
 export default function DataTable({ handleSubmit }) {
   let onClickDelete;
-  //   const token = Cookies.get("token");
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjA3Y2ZmZTEwZWE1MWE4YTFhMjBlNyIsInJvbGUiOiJwdWJsaWMiLCJpYXQiOjE2NzcxODAxMDgsImV4cCI6MTY3NzE4MzcwOH0.5OODxH73r0ra_DLAcfnT-boLmp_7ftxyq9heZkx-GkE";
+
+
   // defining coloumns
   const columns = [
     { field: "_id", headerName: "Id", width: 300, hideable: false, hide: true },
@@ -42,11 +41,39 @@ export default function DataTable({ handleSubmit }) {
           console.log(thisRow._id);
 
           axios
-            .delete(`http://localhost:5000/public/deleteClass/${thisRow._id}`, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
+            .delete(`http://localhost:5000/public/deleteClass/${thisRow._id}`)
+            .then((res) => {
+              console.log(res.data.message);
+              toast.success(res.data.message, {
+                position: toast.POSITION.TOP_CENTER,
+              });
             })
+            .catch((err) => {
+              console.error(err);
+              toast.error(err.message, {
+                position: toast.POSITION.TOP_CENTER,
+              });
+            });
+        };
+
+        // update status
+        const onClickUpdate = (e) => {
+          e.stopPropagation(); // don't select this row after clicking
+
+          const api: GridApi = params.api;
+          const thisRow: Record<string, GridCellValue> = {};
+
+          api
+            .getAllColumns()
+            .filter((c) => c.field !== "_check_" && !!c)
+            .forEach(
+              (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
+            );
+          // alert(JSON.stringify(thisRow))
+          console.log(thisRow._id);
+
+          axios
+            .put(`http://localhost:5000/public/updateStatus/${thisRow._id}`)
             .then((res) => {
               console.log(res.data.message);
               toast.success(res.data.message, {
@@ -76,9 +103,12 @@ export default function DataTable({ handleSubmit }) {
               <Button color="error" onClick={onClickDelete}>
                 <HighlightOffRoundedIcon />
               </Button>
-              <Button color="success">
+
+              <Button color="success" onClick={onClickUpdate}>
                 <CheckCircleOutlineRoundedIcon />
               </Button>
+
+
             </ButtonGroup>
           </Box>
         );

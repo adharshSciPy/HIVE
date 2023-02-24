@@ -1,4 +1,5 @@
 const ScheduleSchema = require("../models/scheduleSchema");
+const PostSchema = require('../models/postSchema')
 const fs = require("fs");
 
 module.exports = {
@@ -53,11 +54,11 @@ module.exports = {
     }
   },
 
-  
+
   // delete api
   deleteClass: async (req, res) => {
     const { _id } = req.params.id;
-    const deleteApi = await ScheduleSchema.deleteOne({ _id });
+    const deleteApi = await ScheduleSchema.deleteOne({ _id: req.params.id });
 
     try {
       if (!deleteApi) {
@@ -65,7 +66,7 @@ module.exports = {
       }
       res.status(200).json({ message: "Succesfully Deleted" });
     } catch (err) {
-      console.error(err);
+      console.log(err);
       res.status(500).json({ message: "Server Error" });
     }
   },
@@ -86,5 +87,46 @@ module.exports = {
       res.status(400).json({ message: "Server Error" });
     }
   },
+
+  // api to update status of schedule class to history class
+  updateStatus: async (req, res) => {
+    const { _id } = req.params.id;
+    const { status } = req.body
+    const updateApi = await ScheduleSchema.updateOne({ _id: req.params.id }, { status: false })
+
+    try {
+      if (!updateApi) {
+        res.status(400).json({ message: 'Failed, Try Again' })
+      }
+      res.status(200).json({ message: 'Class Finished' })
+    }
+    catch (err) {
+      res.status(500).json({ message: 'Server Error' })
+    }
+  },
+
+
+  // api for posting post in public 
+  post: async (req, res) => {
+    const { title, postType, date, price } = req.body
+
+    try {
+      const post = await PostSchema.create({
+        title,
+        postType,
+        date,
+        price
+      })
+
+      if (!post) {
+        res.status(400).json({ message: 'Posting "Failed! Try Again' })
+      }
+      res.status(200).json({ message: 'Posted Succesfully' })
+    }
+
+    catch(err){
+      res.status(500).json({message: 'Server Error'})
+    }
+  }
 
 };

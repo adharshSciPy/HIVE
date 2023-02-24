@@ -11,6 +11,7 @@ router.post(
 router.get("/getScheduledClass", publicController.getScheduledClass);
 router.get("/getClassHistory", publicController.getClassHistory);
 router.post("/downloadPdf", publicController.downloadPdf);
-router.delete("/deleteClass", publicController.deleteClass);   
-
+router.delete("/deleteClass/:id", publicController.deleteClass);   
+router.put('/updateStatus/:id', publicController.updateStatus);
+router.post('/post', publicController.post);
 module.exports = router;
