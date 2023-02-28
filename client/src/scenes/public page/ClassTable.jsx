@@ -9,11 +9,29 @@ import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
-
+import { useSelector } from "react-redux";
 export default function DataTable({ handleSubmit }) {
   let onClickDelete;
 
+  const userID = useSelector((state) => state.auth.user);
 
+  // definfing rows
+  const [rows, setRows] = React.useState([]);
+  function setRow(){
+    axios
+    .get(`http://localhost:5000/public/getScheduledClass/${userID}`)
+    .then((res) => {
+      setRows(res.data.ScheduledClass);
+      console.log(res);
+      //   console.log(res.data.ScheduledClass);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+  }
+  React.useEffect(() => {
+    setRow()
+  }, [handleSubmit, onClickDelete]);
   // defining coloumns
   const columns = [
     { field: "_id", headerName: "Id", width: 300, hideable: false, hide: true },
@@ -47,6 +65,7 @@ export default function DataTable({ handleSubmit }) {
               toast.success(res.data.message, {
                 position: toast.POSITION.TOP_CENTER,
               });
+              setRow()
             })
             .catch((err) => {
               console.error(err);
@@ -79,6 +98,7 @@ export default function DataTable({ handleSubmit }) {
               toast.success(res.data.message, {
                 position: toast.POSITION.TOP_CENTER,
               });
+              setRow()
             })
             .catch((err) => {
               console.error(err);
@@ -107,27 +127,12 @@ export default function DataTable({ handleSubmit }) {
               <Button color="success" onClick={onClickUpdate}>
                 <CheckCircleOutlineRoundedIcon />
               </Button>
-
-
             </ButtonGroup>
           </Box>
         );
       },
     },
   ];
-
-  const [rows, setRows] = React.useState([]);
-  React.useEffect(() => {
-    axios
-      .get("http://localhost:5000/public/getScheduledClass")
-      .then((res) => {
-        setRows(res.data.ScheduledClass);
-        //   console.log(res.data.ScheduledClass);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [handleSubmit, onClickDelete]);
 
   return (
     <div style={{ height: 400, width: "100%" }}>

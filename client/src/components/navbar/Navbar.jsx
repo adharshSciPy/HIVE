@@ -237,14 +237,15 @@ export default function PrimarySearchAppBar() {
             (role === 'admin') &&
             (
               <>
-                <p onClick={() => navigate('')} style={{ marginLeft: '25rem', cursor: 'pointer', fontWeight: 500 }}>Courses</p>
-                <p onClick={() => navigate('')} style={{ marginLeft: '1rem', cursor: 'pointer', fontWeight: 500 }}>Posts</p>
+                <p onClick={() => navigate('/admin/publicList')} style={{ marginLeft: '25rem', cursor: 'pointer', fontWeight: 500 }}>Public</p>
+                <p onClick={() => navigate('/admin/studentList')} style={{ marginLeft: '1rem', cursor: 'pointer', fontWeight: 500 }}>Students</p>
+                <p onClick={() => navigate('/admin/adminPosts')} style={{ marginLeft: '1rem', cursor: 'pointer', fontWeight: 500 }}>Posts</p>
               </>
             )
           }
 
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', justifyContent: 'space-between' }}>
             {
               (role === 'admin') && <p>Welcome, Admin</p>
             }

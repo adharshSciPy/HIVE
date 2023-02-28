@@ -1,89 +1,163 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { MenuItem } from '@mui/material';
-import { setRole } from '../../store/auth';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import dayjs from 'dayjs';
-import axios from 'axios'
-import { toast } from 'react-toastify'
-
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Card, CardContent, MenuItem } from "@mui/material";
+import { setRole } from "../../store/auth";
+import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import dayjs from "dayjs";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import PostTable from "../public page/PostTable";
 
 const theme = createTheme();
 
-
 export default function NewPost() {
-  const [title, setTitle] = React.useState('')
-  const [price, setPrice] = React.useState('')
-  const [postType, setPostType] = React.useState('')
-  const [date, setDate] = React.useState(dayjs('03-02-2023'))
+  const userID = useSelector((state) => state.auth.user);
 
+  // selecting post type in post form
+  const [postType, setPostType] = React.useState("job-fair");
+  const [jobFair, setJobFair] = React.useState(false);
+  const [webinar, setWebinar] = React.useState(false);
+  const [internship, setInternship] = React.useState(false);
+  const [placement, setPlacement] = React.useState(false);
+
+  const handleChange = (event) => {
+    setPostType(event.target.value);
+    if (event.target.value === "job-fair") {
+      setJobFair(true);
+      setWebinar(false);
+      setInternship(false);
+    } else if (event.target.value === "webinar") {
+      setJobFair(false);
+      setWebinar(true);
+      setInternship(false);
+    } else if (event.target.value === "internship") {
+      setJobFair(false);
+      setWebinar(false);
+      setInternship(true);
+    } else if (event.target.value === "placement") {
+      setJobFair(false);
+      setWebinar(false);
+      setInternship(true);
+    } else {
+      setJobFair(false);
+      setWebinar(false);
+      setInternship(false);
+    }
+  };
+
+  const today = Date.now();
+  const [title, setTitle] = React.useState("");
+  const [price, setPrice] = React.useState("");
+  const [date, setDate] = React.useState(dayjs(today));
+  const [time, setTime] = React.useState(dayjs(today));
+  const [location, setLocation] = React.useState("");
+  const [link, setLink] = React.useState("");
+  const [salary, setSalary] = React.useState("");
+  const [company, setCompany] = React.useState("");
+  const [place, setPlace] = React.useState("");
 
   const handleDate = (newValue) => {
     setDate(newValue);
   };
 
-
-  const handleChange = (event) => {
-    setPostType(event.target.value)
-  }
-
-
-
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    axios.post('http://localhost:5000/public/post', {
-      title: data.get('title'),
-      postType: data.get('post-type'),
-      price: data.get('price'),
-      date: data.get('date')
-    })
+    axios
+      .post("http://localhost:5000/public/post", {
+        userID: userID,
+        title: data.get("title"),
+        postType: data.get("post-type"),
+        price: data.get("price"),
+        date: data.get("date"),
+        meetLink: data.get("meetlink"),
+        company: data.get("company"),
+        place: data.get("place"),
+        salary: data.get("salary"),
+      })
       .then((res) => {
         toast.success(res.data.message, {
           position: toast.POSITION.TOP_CENTER,
         });
-        setTitle('')
-        setPrice('')
-        setPostType('')
+        setTitle("");
+        setPrice("");
+        setPostType("");
+        // setDate("");
+        setLocation("");
+        setLink("");
+        setSalary("");
+        setCompany("");
+        setPlace("");
       })
       .catch((err) => {
         toast.error(err.message, {
           position: toast.POSITION.TOP_CENTER,
         });
-      })
+        console.log(err);
+      });
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
+    <>
+      <Box
+        container
+        spacing={0}
+        display="flex"
+        direction={{ sm: "row", md: "column", lg: "column", lx: "column" }}
+        justifyContent="space-between"
+        sx={{ p: 6, pt:1 }}
+      >
+        <Card
           sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            minWidth: 300,
+            maxWidth: 400,
+            minHeight: 500,
+            p: 4,
+            backgroundColor: "#E7EBF0",
           }}
         >
-          <Typography component="h1" variant="h5">
+          <Typography component="heading" variant="h6">
             Create New Post
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
+            <TextField
+              variant="outlined"
+              select
+              maxWidth
+              value={postType}
+              label="Post-Type"
+              name="post-type"
+              sx={{ width: "100%", mt: 1 }}
+              size="small"
+              onChange={handleChange}
+            >
+              <MenuItem value="job-fair">Job Fair</MenuItem>
+              <MenuItem value="webinar">Webinar</MenuItem>
+              <MenuItem value="internship">Internship</MenuItem>
+              <MenuItem value="placement">Placement</MenuItem>
+            </TextField>
+
             <TextField
               margin="normal"
               required
@@ -92,49 +166,175 @@ export default function NewPost() {
               label="Title"
               name="title"
               autoFocus
-              size='small'
-              value={title}
-              onChange={(e)=> {setTitle(e.target.value)}}
-            />
-            <TextField
-              variant="outlined"
-              select
-              maxWidth
-              value={postType}
-              label="Post-Type"
-              name='post-type'
-              sx={{ width: '100%', mt: 1 }}
               size="small"
-              onChange={handleChange}
-            >
-              <MenuItem value='jobfair'>Job Fair</MenuItem>
-              <MenuItem value='webinar'>Webinar</MenuItem>
-              <MenuItem value='internship'>Internship</MenuItem>
-              <MenuItem value='placement'>Placement</MenuItem>
-            </TextField>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="price"
-              label="Price"
-              type="text"
-              id="price"
-              size='small'
-              value={price}
-              onChange={(e)=> {setPrice(e.target.value)}}
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
             />
+
+            {!jobFair ? (
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="price"
+                label="Price"
+                type="text"
+                id="price"
+                size="small"
+                value={price}
+                onChange={(e) => {
+                  setPrice(e.target.value);
+                }}
+              />
+            ) : (
+              ""
+            )}
+
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DesktopDatePicker
                 label="Date"
                 inputFormat="DD/MM/YYYY"
                 value={date}
                 onChange={handleDate}
-                renderInput={(params) => <TextField {...params} name="date" size='small' sx={{ minWidth: '100%', margin: '.5rem 0' }} fullWidth />}
-                size='small'
-
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    name="date"
+                    size="small"
+                    sx={{ minWidth: "100%", margin: ".5rem 0" }}
+                    fullWidth
+                  />
+                )}
+                size="small"
               />
             </LocalizationProvider>
+
+            {jobFair ? (
+              <>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <TimePicker
+                    label="Time"
+                    value={time}
+                    onChange={(e) => setTime(e.target.value)}
+                    renderInput={(params) => (
+                      <TextField
+                        size="small"
+                        sx={{ fontSize: "12px", mt: 1 }}
+                        {...params}
+                        fullWidth
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="location"
+                  label="Location"
+                  type="text"
+                  id="location"
+                  size="small"
+                  value={location}
+                  onChange={(e) => {
+                    setLocation(e.target.value);
+                  }}
+                />
+              </>
+            ) : (
+              ""
+            )}
+
+            {webinar ? (
+              <>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <TimePicker
+                    label="Time"
+                    onChange={(e) => setTime(e.target.value)}
+                    renderInput={(params) => (
+                      <TextField
+                        size="small"
+                        sx={{ fontSize: "12px", mt: 1 }}
+                        {...params}
+                        fullWidth
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="meetlink"
+                  label="Meet-link"
+                  type="text"
+                  id="meetlink"
+                  size="small"
+                  value={link}
+                  onChange={(e) => {
+                    setLink(e.target.value);
+                  }}
+                />
+              </>
+            ) : (
+              ""
+            )}
+
+            {internship ? (
+              <>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="company"
+                  label="Company"
+                  type="text"
+                  id="meetlink"
+                  size="small"
+                  value={company}
+                  onChange={(e) => {
+                    setCompany(e.target.value);
+                  }}
+                />
+
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="place"
+                  label="Place"
+                  type="text"
+                  id="text"
+                  size="small"
+                  value={place}
+                  onChange={(e) => {
+                    setPlace(e.target.value);
+                  }}
+                />
+
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="salary"
+                  label="Salary"
+                  type="text"
+                  id="salary"
+                  size="small"
+                  value={salary}
+                  onChange={(e) => {
+                    setSalary(e.target.value);
+                  }}
+                />
+              </>
+            ) : (
+              ""
+            )}
+
             <Button
               type="submit"
               fullWidth
@@ -144,8 +344,24 @@ export default function NewPost() {
               Post
             </Button>
           </Box>
-        </Box>
-      </Container>
-    </ThemeProvider>
+        </Card>
+
+        <Card
+          sx={{
+            minWidth: 700,
+            maxHeight: 500,
+            p: 1,
+            backgroundColor: "#E7EBF0",
+          }}
+        >
+          <CardContent>
+            <Typography variant="subtitle1" color="initial">
+              Manage Posts
+            </Typography>
+            <PostTable handleSubmit={handleSubmit} />
+          </CardContent>
+        </Card>
+      </Box>
+    </>
   );
 }

@@ -8,10 +8,16 @@ router.post(
   multerConfig.upload.single("pdf"),
   publicController.scheduleClass
 );
-router.get("/getScheduledClass", publicController.getScheduledClass);
+
+
+router.get("/getScheduledClass/:id", publicController.getScheduledClass);
 router.get("/getClassHistory", publicController.getClassHistory);
 router.post("/downloadPdf", publicController.downloadPdf);
-router.delete("/deleteClass/:id", publicController.deleteClass);   
-router.put('/updateStatus/:id', publicController.updateStatus);
-router.post('/post', publicController.post);
+router.delete("/deleteClass/:id", publicController.deleteClass);
+router.put("/updateStatus/:id", publicController.updateStatus);
+router.post("/post", publicController.post);
+router.get('/getAllPosts/:id', publicController.getAllPost)
+router.delete('/deletePost/:id', publicController.deletePost)
+
+
 module.exports = router;
