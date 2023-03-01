@@ -38,4 +38,16 @@ module.exports = {
       res.status(500).json({ message: "Server Error" });
     }
   },
+
+  deletePublic: async (req, res) => {
+    const { _id } = req.params.id;
+    const deleteApi = await ScheduleSchema.deleteOne({
+      _id: req.params.id,
+    });
+
+    if (!deleteApi) {
+      res.status(400).json({ message: "Delete operation failed" });
+    }
+    res.status(200).json({ message: "Delete Succesfull" });
+  },
 };

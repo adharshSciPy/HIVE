@@ -67,6 +67,7 @@ export default function SignUp() {
         toast.success(res.data.message, {
           position: toast.POSITION.TOP_CENTER,
         });
+        navigate('/login')
       })
       .catch((err) => {
         console.log(err)

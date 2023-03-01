@@ -5,5 +5,6 @@ const adminController = require("../controllers/adminController");
 router.get("/getAllPublics", adminController.getAllPublics);
 router.get("/getAllStudents", adminController.getAllStudents);
 router.get("/getAllPosts", adminController.getAllPosts);
+router.delete("/deletePublic/:id", adminController.deletePublic)
 
 module.exports = router;
