@@ -30,7 +30,7 @@ export default function SignUp() {
 
   const [student, setStudent] = useState(false)
   const [role, setrole] = useState('')
-  const [date, setDate] = React.useState(dayjs('2023-01-03'));
+  const [date, setDate] = React.useState('');
 
   const theme = createTheme();
   const navigate = useNavigate()
@@ -59,7 +59,7 @@ export default function SignUp() {
       email: data.get('email'),
       password: data.get('password'),
       gender: data.get('gender'),
-      dob: date,
+      dob: data.get('date'),
       college: data.get('college'),
       course: data.get('course')
     })
@@ -67,6 +67,7 @@ export default function SignUp() {
         toast.success(res.data.message, {
           position: toast.POSITION.TOP_CENTER,
         });
+        navigate('/login')
       })
       .catch((err) => {
         console.log(err)
@@ -170,11 +171,11 @@ export default function SignUp() {
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DesktopDatePicker
                           label="Date of Birth"
-                          inputFormat="MM/DD/YYYY"
+                          inputFormat="DD/MM/YYYY"
                           value={date}
                           onChange={handleDate}
-                          renderInput={(params) => <TextField {...params} />}
-                          name="dob"
+                          renderInput={(params) => <TextField {...params}  name="date"/>}
+                       
                         />
                       </LocalizationProvider>
                     </Grid>

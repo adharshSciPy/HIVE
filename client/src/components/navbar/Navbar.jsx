@@ -20,6 +20,7 @@ import { logout, setRole, setUser } from '../../store/auth';
 import { Button } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import axios from 'axios'
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
@@ -36,6 +37,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function PrimarySearchAppBar() {
+  const userID = useSelector((state) => state.auth.user);
+  console.log(userID)
+  React.useEffect(() => {
+    setTimeout(() => {
+      axios.get(`http://localhost:5000/user/getAccountWithId/:${userID}`)
+      .then((res) => {
+        console.log("Name response" + res)
+      })
+    }, 3000)
+  }, [])
+
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -237,17 +250,17 @@ export default function PrimarySearchAppBar() {
             (role === 'admin') &&
             (
               <>
-                <p onClick={() => navigate('')} style={{ marginLeft: '25rem', cursor: 'pointer', fontWeight: 500 }}>Courses</p>
-                <p onClick={() => navigate('')} style={{ marginLeft: '1rem', cursor: 'pointer', fontWeight: 500 }}>Posts</p>
+                <p onClick={() => navigate('/admin/publicList')} style={{ marginLeft: '25rem', cursor: 'pointer', fontWeight: 500 }}>Public</p>
+                <p onClick={() => navigate('/admin/studentList')} style={{ marginLeft: '1rem', cursor: 'pointer', fontWeight: 500 }}>Students</p>
+                <p onClick={() => navigate('/admin/adminPosts')} style={{ marginLeft: '1rem', cursor: 'pointer', fontWeight: 500 }}>Posts</p>
               </>
             )
           }
 
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            {
-              (role === 'admin') && <p>Welcome, Admin</p>
-            }
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', justifyContent: 'space-between' }}>
+            {isAuthenticated ? <p sx={{ mr: 3 }}>Welcome, Admin</p> : ''}
+
 
             {
               isAuthenticated &&

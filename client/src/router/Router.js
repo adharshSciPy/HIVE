@@ -12,6 +12,9 @@ import Post from "../scenes/student page/Post";
 import ClassShedule from "../scenes/public page/ClassShedule";
 import NewPost from "../scenes/public page/NewPost";
 import CertificateUpload from "../scenes/public page/CertificateUpload";
+import AdminPublics from "../scenes/admin page/AdminPublics";
+import AdminStudents from "../scenes/admin page/AdminStudent";
+import AdminPosts from "../scenes/admin page/AdminPosts";
 
 export const router = createBrowserRouter([
   {
@@ -31,11 +34,43 @@ export const router = createBrowserRouter([
       },
       {
         path: "/admin",
-        element: (
-          <CheckAuth>
-            <AdminPage />
-          </CheckAuth>
-        ),
+        children: [
+          {
+            index: true,
+            element: (
+              <CheckAuth>
+                <AdminPage />
+              </CheckAuth>
+            ),
+          },
+
+          {
+            path: "/admin/publicList",
+            element: (
+              <CheckAuth>
+                <AdminPublics />
+              </CheckAuth>
+            ),
+          },
+
+          {
+            path: "/admin/studentList",
+            element: (
+              <CheckAuth>
+                <AdminStudents />
+              </CheckAuth>
+            ),
+          },
+
+          {
+            path: "/admin/adminPosts",
+            element: (
+              <CheckAuth>
+                <AdminPosts />
+              </CheckAuth>
+            ),
+          },
+        ],
       },
       {
         path: "/student",
@@ -44,7 +79,7 @@ export const router = createBrowserRouter([
             index: true,
             element: (
               <CheckAuth>
-                <StudentPage />{" "}
+                <StudentPage />
               </CheckAuth>
             ),
           },

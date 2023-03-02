@@ -66,19 +66,19 @@ module.exports = {
 
 
   // verify token
-  verifyToken: async(req, res) => {
-    const {token} = req.body
-    try{
+  verifyToken: async (req, res) => {
+    const { token } = req.body
+    try {
       const verify = jwt.verify(token, "IamGreat")
-      if(!verify){
-        res.status(400).json({"message": "Verification failed"})
+      if (!verify) {
+        res.status(400).json({ "message": "Verification failed" })
       }
-      res.status(200).json({"message": "Verification Success"})
+      res.status(200).json({ "message": "Verification Success" })
     }
-   catch(err){
-    res.status(500).json({"message": "Server Error"})
-    console.log("Verification Error"+err)
-   }
+    catch (err) {
+      res.status(500).json({ "message": "Server Error" })
+      console.log("Verification Error" + err)
+    }
   },
 
   //   forget password apis
@@ -109,10 +109,10 @@ module.exports = {
     try {
       // hasing new password
       const salt = await bcrypt.genSaltSync(10)
-      const newHashedPassword = await bcrypt.hash(newPassword, salt, (err,data)=>console.log(err));
+      const newHashedPassword = await bcrypt.hash(newPassword, salt, (err, data) => console.log(err));
       const updateUserPassword = await User.findByIdAndUpdate(id, {
         password: newHashedPassword,
-      }, {new: true});
+      }, { new: true });
       if (!updateUserPassword) {
         res.status(400).json({ message: "User Id error" });
       }
@@ -123,4 +123,19 @@ module.exports = {
       console.log(err);
     }
   },
+
+  getAccountWithID: async (req, res) => {
+    const { _id } = req.params.id;
+    const user = await User.find({ _id: req.params.id });
+
+    try {
+      if (!user) {
+        res.status(400).json({ message: 'User Not found' })
+      }
+      res.status(200).json({ message: "User found", user })
+    }
+    catch (err) {
+      res.status(500).json({ message: 'User Found' })
+    }
+  }
 };
