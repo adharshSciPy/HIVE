@@ -124,8 +124,8 @@ module.exports = {
       res.status(200).json({ message: 'Posted Succesfully' })
     }
 
-    catch(err){
-      res.status(500).json({message: 'Server Error'})
+    catch (err) {
+      res.status(500).json({ message: 'Server Error' })
     }
   }
 

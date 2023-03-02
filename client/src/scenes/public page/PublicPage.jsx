@@ -23,10 +23,10 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const theme = createTheme();
 function PublicPage() {
   return (
-   
+
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <h2 style={{textAlign: 'center'}}>Posts</h2>
+      <h2 style={{ textAlign: 'center' }}>Posts</h2>
       <main>
         <Container sx={{ py: 8 }} maxWidth="md">
           {/* End hero unit */}
