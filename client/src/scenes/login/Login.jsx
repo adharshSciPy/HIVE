@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
+import { Link as RouterLink } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -20,6 +21,7 @@ import {
   setStudent,
   setPublic,
   setAdmin,
+  setUserName
 } from "../../store/auth";
 import { MenuItem } from "@mui/material";
 import axios from "axios";
@@ -47,10 +49,14 @@ export default function SignIn() {
           position: toast.POSITION.TOP_CENTER,
         });
         const { token, user } = res.data;
+
         Cookie.set("Token", token);
         const userData = (user._id)
+        const userName = (user.fullName)
+
         // alert(userData)
         dispatch(setUser(userData))
+        dispatch(setUserName(userName))
 
         // switching routers
         setTimeout(() => {
@@ -141,9 +147,11 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item>
-                <Link href="#" variant="body2">
+              <RouterLink to="/register">
+                <Link component="span" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
+              </RouterLink>
               </Grid>
             </Grid>
           </Box>

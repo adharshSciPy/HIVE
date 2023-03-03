@@ -44,6 +44,7 @@ function ClassShedule() {
     const data = new FormData(event.currentTarget);
 
     console.log(data);
+    console.log(file)
 
     axios
       .post("http://localhost:5000/public/scheduleClass", {
@@ -56,8 +57,7 @@ function ClassShedule() {
         time: data.get("time"),
         meetLink: data.get("meetLink"),
         date: data.get("date"),
-
-        // pdf: data.get('pdf'),
+        pdf: file,
       })
       .then((res) => {
         toast.success(res.data.message, {
@@ -99,7 +99,7 @@ function ClassShedule() {
             </Typography>
 
             <Box sx={{ mt: 1 }}>
-              <form encType="form-data/json" onSubmit={HandleSubmit}>
+              <form enctype="multipart/form-data" onSubmit={HandleSubmit}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DesktopDatePicker
                     label="Date"
@@ -116,7 +116,7 @@ function ClassShedule() {
                       />
                     )}
                     size="small"
-                  />
+                  />  
                 </LocalizationProvider>
 
                 <TextField

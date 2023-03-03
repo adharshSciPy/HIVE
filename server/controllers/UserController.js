@@ -6,7 +6,6 @@ module.exports = {
   register: async (req, res, next) => {
     const { fullName, role, email, password, gender, dob, college, course } =
       req.body;
-    console.log(req.body);
 
     try {
       // hashing password
@@ -38,7 +37,6 @@ module.exports = {
 
   login: async (req, res, next) => {
     const { email, password } = req.body;
-    console.log(req.body);
 
     try {
       // find the user

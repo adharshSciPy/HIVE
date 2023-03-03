@@ -37,16 +37,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function PrimarySearchAppBar() {
-  const userID = useSelector((state) => state.auth.user);
-  console.log(userID)
-  React.useEffect(() => {
-    setTimeout(() => {
-      axios.get(`http://localhost:5000/user/getAccountWithId/:${userID}`)
-      .then((res) => {
-        console.log("Name response" + res)
-      })
-    }, 3000)
-  }, [])
+  const userName = useSelector((state) => state.auth.userName);
+  
 
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -81,6 +73,7 @@ export default function PrimarySearchAppBar() {
   const role = useSelector((state) => state.auth.role)
   // const Token = Cookies.get('Token')
   const handleLogout = () => {
+    handleMenuClose()
     dispatch(logout());
     Cookies.remove('Token')
     navigate('/')
@@ -259,7 +252,7 @@ export default function PrimarySearchAppBar() {
 
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', justifyContent: 'space-between' }}>
-            {isAuthenticated ? <p sx={{ mr: 3 }}>Welcome, Admin</p> : ''}
+            {isAuthenticated ? <p style={{ mr: 3, fontSize: '12px', marginRight: '1rem' }}>Hello<span style={{marginLeft: '.2rem', fontSize: '15px'}}> {userName},</span></p> : ''}
 
 
             {

@@ -10,8 +10,9 @@ router.post(
   publicController.scheduleClass
 );
 
-router.get("/getScheduledClass", publicController.getScheduledClass);
-router.get("/getClassHistory", publicController.getClassHistory);
+
+router.get("/getScheduledClass/:id", publicController.getScheduledClass);
+router.get("/getClassHistory/:id", publicController.getClassHistory);
 router.post("/downloadPdf", publicController.downloadPdf);
 router.delete("/deleteClass/:id", publicController.deleteClass);
 router.put("/updateStatus/:id", publicController.updateStatus);

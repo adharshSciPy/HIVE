@@ -1,6 +1,5 @@
 const ScheduleSchema = require("../models/scheduleSchema");
 const PostSchema = require("../models/postSchema");
-const fs = require("fs");
 const jwt = require("jsonwebtoken");
 
 module.exports = {
@@ -13,7 +12,7 @@ module.exports = {
         time,
         date,
         meetLink,
-        pdfName: "Demo Pdf",
+        pdfName: 'Demo pdf',
         status: true,
       });
       if (!scheduleData) {
@@ -45,7 +44,8 @@ module.exports = {
   },
 
   getClassHistory: async (req, res) => {
-    const classHistory = await ScheduleSchema.find({ status: false });
+    const { _id } = req.params.id;
+    const classHistory = await ScheduleSchema.find({ ownerID: req.params.id, status: false });
 
     try {
       if (!classHistory) {
@@ -124,7 +124,7 @@ module.exports = {
       company,
       place,
       salary,
- 
+
     } = req.body;
 
     try {
