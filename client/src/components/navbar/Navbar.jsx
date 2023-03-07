@@ -1,341 +1,328 @@
-import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from "react-redux"
-import { logout, setRole, setUser } from '../../store/auth';
-import { Button } from '@mui/material';
-import { NavLink } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import axios from 'axios'
+import * as React from "react";
+import PropTypes from "prop-types";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import MenuIcon from "@mui/icons-material/Menu";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import { useNavigate, NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, setRole, setUser } from "../../store/auth";
+import Cookies from "js-cookie";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { Card, CardMedia } from "@mui/material";
+import { toast } from "react-toastify";
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
+const drawerWidth = 240;
 
-export default function PrimarySearchAppBar() {
+function DrawerAppBar(props) {
+  // navLink active status
+  let activeStyle = {
+    textDecoration: "none",
+    backgroundColor: "skyblue",
+    borderRadius: ".8rem",
+  };
+
+  let nonActiveStyle = {
+    textDecoration: "none",
+    color: "red",
+  };
+
+  // customised functionalities
   const userName = useSelector((state) => state.auth.userName);
-  
-
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
-
-
-
   // redux functions importing
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const role = useSelector((state) => state.auth.role)
+  const role = useSelector((state) => state.auth.role);
+  const [navItems, setNavItems] = React.useState([]);
+  const studentNavItems = [
+    // {
+    //   title: "Home",
+    //   link: "student",
+    // },
+    {
+      title: "Class-Room",
+      link: "/student/courses",
+    },
+    {
+      title: "Posts",
+      link: "/student/post",
+    },
+  ];
+
+  const publicNavItems = [
+    // {
+    //   title: "Home",
+    //   link: "/public",
+    // },
+    {
+      title: "Class-Room",
+      link: "/public/sheduleCourses",
+    },
+    {
+      title: "Post",
+      link: "/public/addPost",
+    },
+    {
+      title: "Certificate",
+      link: "/public/certificateUpload",
+    },
+  ];
+
+  const adminNavItems = [
+    // {
+    //   title: "Home",
+    //   link: "/admin",
+    // },
+    {
+      title: "Public",
+      link: "/admin/publicList",
+    },
+    {
+      title: "Students",
+      link: "/admin/studentList",
+    },
+    {
+      title: "Posts",
+      link: "/admin/adminPosts",
+    },
+  ];
+
   // const Token = Cookies.get('Token')
   const handleLogout = () => {
-    handleMenuClose()
     dispatch(logout());
-    Cookies.remove('Token')
-    navigate('/')
-  }
+    Cookies.remove("Token");
+    navigate("/");
+    toast.success("Logout Successfully", {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  };
 
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
+  const { window } = props;
+  const [mobileOpen, setMobileOpen] = React.useState(true);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen((prevState) => !prevState);
+  };
+
+  const drawer = (
+    <Box
+      onClick={handleDrawerToggle}
+      sx={{
+        textAlign: "center",
+        alignItems: "center",
+        display: "flex",
+        flexDirection: "column",
       }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={handleLogout}>Logout</MenuItem>
-    </Menu>
+      <Typography variant="h6" color="primary" sx={{ my: 2, fontWeight: 700 }}>
+        HIVE
+      </Typography>
+      <Divider />
+
+      {role === "student" && (
+        <>
+          <Card
+            sx={{
+              height: "8rem",
+              width: "8rem",
+              borderRadius: "50%",
+              backgroundColor: "yellow",
+              mt: 3,
+              mb: 2,
+              overflow: "hidden",
+            }}
+          >
+            <CardMedia
+              component="img"
+              sx={{ width: "100%", height: "100%" }}
+              image="https://media.istockphoto.com/photos/headshot-portrait-of-smiling-ethnic-businessman-in-office-picture-id1300512215?b=1&k=20&m=1300512215&s=612x612&w=0&h=pP5ksvhx-gIHFVAyZTn31H_oJuhB0nX4HnLLUN2kVAg="
+              alt="Live from space album cover"
+            />
+          </Card>
+          <Typography variant="body1" color="primary" sx={{ fontWeight: 500 }}>
+            {userName}
+          </Typography>
+          <Typography variant="caption" sx={{ fontWeight: 500 }}>
+            Bsc Computer Science
+          </Typography>
+
+          <Button
+            startIcon={<LogoutIcon />}
+            onClick={handleLogout}
+            size="small"
+          >
+            Logout
+          </Button>
+        </>
+      )}
+      {role === "admin" && (
+        <List>
+          {adminNavItems.map((item, val) => (
+            <ListItem key={val} disablePadding>
+              <ListItemButton sx={{ textAlign: "center" }} onClick={()=>navigate(item.link)}>
+                <ListItemText primary={item.title} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      )}
+
+      {
+        role === 'public' && 
+        <List>
+        {publicNavItems.map((item, val) => (
+          <ListItem key={val} disablePadding>
+            <ListItemButton sx={{ textAlign: "center" }}  onClick={()=>navigate(item.link)}>
+              <ListItemText primary={item.title} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      }
+
+      {/* profile ui while student Login */}
+    </Box>
   );
 
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ flexGrow: 1, mb: 4 }}>
-      <AppBar position="static">
+    <Box
+      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+    >
+      {/* <CssBaseline /> */}
+      <AppBar component="nav" sx={{ mb: 3 }}>
         <Toolbar>
-          {
-            isAuthenticated &&
-            (
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="open drawer"
-                sx={{ mr: 2 }}
-              >
-                <MenuIcon />
-              </IconButton>
-            )
-          }
-          {
-            (role === 'student') &&
-            <>
-              <Typography
-                variant="h6"
-                noWrap
-                component="div"
-                sx={{ display: { xs: 'none', sm: 'block', fontWeight: 800, cursor: 'pointer' } }}
-                onClick={() => { navigate('/student') }}
-              >
-                HIVE
-              </Typography>
-            </>
-          }
-
-          {
-            (role === 'admin') &&
-            <>
-              <Typography
-                variant="h6"
-                noWrap
-                component="div"
-                sx={{ display: { xs: 'none', sm: 'block', fontWeight: 800, cursor: 'pointer' } }}
-                onClick={() => { navigate('/admin') }}
-              >
-                HIVE
-              </Typography>
-            </>
-          }
-
-          {
-            (role === 'public') &&
-            <>
-              <Typography
-                variant="h6"
-                noWrap
-                component="div"
-                sx={{ display: { xs: 'none', sm: 'block', fontWeight: 800, cursor: 'pointer' } }}
-                onClick={() => { navigate('/public') }}
-              >
-                HIVE
-              </Typography>
-            </>
-          }
-
-          {
-            (role === 'student') &&
-            (
-              <>
-                <p onClick={() => navigate('/student/courses')} style={{ marginLeft: '25rem', cursor: 'pointer', fontWeight: 500 }}>Courses</p>
-                <p onClick={() => navigate('/student/post')} style={{ marginLeft: '1rem', cursor: 'pointer', fontWeight: 500 }}>Posts</p>
-                <p style={{ marginLeft: '1rem', cursor: 'pointer', fontWeight: 500 }}>Club</p>
-              </>
-            )
-          }
-
-          {
-            (role === 'public') &&
-            (
-              <>
-                <p onClick={() => navigate('/public/sheduleCourses')} style={{ marginLeft: '25rem', cursor: 'pointer', fontWeight: 500 }}>Class</p>
-                <p onClick={() => navigate('/public/addPost')} style={{ marginLeft: '1rem', cursor: 'pointer', fontWeight: 500 }}>Post</p>
-                <p onClick={() => navigate('/public/certificateUpload')} style={{ marginLeft: '1rem', cursor: 'pointer', fontWeight: 500 }}>Certificate</p>
-              </>
-            )
-          }
-
-          {
-            (role === 'admin') &&
-            (
-              <>
-                <p onClick={() => navigate('/admin/publicList')} style={{ marginLeft: '25rem', cursor: 'pointer', fontWeight: 500 }}>Public</p>
-                <p onClick={() => navigate('/admin/studentList')} style={{ marginLeft: '1rem', cursor: 'pointer', fontWeight: 500 }}>Students</p>
-                <p onClick={() => navigate('/admin/adminPosts')} style={{ marginLeft: '1rem', cursor: 'pointer', fontWeight: 500 }}>Posts</p>
-              </>
-            )
-          }
-
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', justifyContent: 'space-between' }}>
-            {isAuthenticated ? <p style={{ mr: 3, fontSize: '12px', marginRight: '1rem' }}>Hello<span style={{marginLeft: '.2rem', fontSize: '15px'}}> {userName},</span></p> : ''}
-
-
-            {
-              isAuthenticated &&
-              (
-                <>
-                  <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="error">
-                      <MailIcon />
-                    </Badge>
-                  </IconButton>
-
-
-                  <IconButton
-                    size="large"
-                    aria-label="show 17 new notifications"
-                    color="inherit"
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{
+              mr: 2,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, display: { xs: "block", fontWeight: 600 } }}
+          >
+            HIVE
+          </Typography>
+{/* 
+          <Typography variant="subtitle1 " color="white" sx={{mr: 7}}>
+            welcome {userName}
+          </Typography> */}
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            {/* navbar for students */}
+            {role === "student" &&
+              studentNavItems.map((item, val) => {
+                return (
+                  <NavLink
+                    to={item.link}
+                    style={({ isActive }) =>
+                      isActive ? activeStyle : nonActiveStyle
+                    }
                   >
-                    <Badge badgeContent={17} color="error">
-                      <NotificationsIcon />
-                    </Badge>
-                  </IconButton>
+                    <Button key={val} sx={{ color: "#fff" }}>
+                      {item.title}
+                    </Button>
+                  </NavLink>
+                );
+              })}
 
-                  <IconButton
-                    size="large"
-                    edge="end"
-                    aria-label="account of current user"
-                    aria-controls={menuId}
-                    aria-haspopup="true"
-                    onClick={handleProfileMenuOpen}
-                    color="inherit"
+            {/* navbar for students */}
+            {role === "public" &&
+              publicNavItems.map((item, val) => {
+                return (
+                  <NavLink
+                    to={item.link}
+                    style={({ isActive }) =>
+                      isActive ? activeStyle : nonActiveStyle
+                    }
                   >
-                    <AccountCircle />
-                  </IconButton>
-                </>
-              )
-            }
+                    <Button key={val} sx={{ color: "#fff" }}>
+                      {item.title}
+                    </Button>
+                  </NavLink>
+                );
+              })}
 
-            {
-              !isAuthenticated &&
-              (
-                <Box>
-                  <Button color="primary"
-                    size="large"
-                    variant="filled"
-                    onClick={() => { navigate('/login') }}
+            {/* navbar for students */}
+            {role === "admin" &&
+              adminNavItems.map((item, val) => {
+                return (
+                  <NavLink
+                    to={item.link}
+                    style={({ isActive }) =>
+                      isActive ? activeStyle : nonActiveStyle
+                    }
                   >
-                    Login
-                  </Button>
-                  <Button
-                    color="primary"
-                    size="large"
-                    variant="filled"
-                    onClick={() => { navigate('/register') }}
-                  >
-                    Register
-                  </Button>
-                </Box>
-              )
-            }
-
-          </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              {
-                isAuthenticated &&
-                (
-                  <MoreIcon />
-                )
-              }
-            </IconButton>
+                    <Button key={val} sx={{ color: "#fff" }}>
+                      {item.title}
+                    </Button>
+                  </NavLink>
+                );
+              })}
+            {isAuthenticated && (
+              <Button
+                startIcon={<LogoutIcon />}
+                onClick={handleLogout}
+                sx={{ color: "#fff", ml: 4 }}
+              >
+                Logout
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
-    </Box >
+      <Box component="nav" sx={{ mb: "6rem" }}>
+        <Drawer
+          container={container}
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            display: { xs: "block" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
+          }}
+        >
+          {drawer}
+        </Drawer>
+      </Box>
+    </Box>
   );
 }
+
+DrawerAppBar.propTypes = {
+  /**
+   * Injected by the documentation to work in an iframe.
+   * You won't need it on your project.
+   */
+  window: PropTypes.func,
+};
+
+export default DrawerAppBar;

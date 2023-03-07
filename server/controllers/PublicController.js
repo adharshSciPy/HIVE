@@ -12,7 +12,7 @@ module.exports = {
         time,
         date,
         meetLink,
-        pdfName: 'Demo pdf',
+        pdfName: "Demo pdf",
         status: true,
       });
       if (!scheduleData) {
@@ -45,7 +45,10 @@ module.exports = {
 
   getClassHistory: async (req, res) => {
     const { _id } = req.params.id;
-    const classHistory = await ScheduleSchema.find({ ownerID: req.params.id, status: false });
+    const classHistory = await ScheduleSchema.find({
+      ownerID: req.params.id,
+      status: false,
+    });
 
     try {
       if (!classHistory) {
@@ -124,7 +127,6 @@ module.exports = {
       company,
       place,
       salary,
-
     } = req.body;
 
     try {
@@ -138,7 +140,7 @@ module.exports = {
         company,
         place,
         salary,
-        status: false
+        status: false,
       });
 
       if (!post) {

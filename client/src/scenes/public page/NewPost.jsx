@@ -63,8 +63,8 @@ export default function NewPost() {
   const today = Date.now();
   const [title, setTitle] = React.useState("");
   const [price, setPrice] = React.useState("");
-  const [date, setDate] = React.useState(dayjs(today));
-  const [time, setTime] = React.useState(dayjs(today));
+  const [date, setDate] = React.useState(new Date());
+  const [time, setTime] = React.useState(new Date());
   const [location, setLocation] = React.useState("");
   const [link, setLink] = React.useState("");
   const [salary, setSalary] = React.useState("");

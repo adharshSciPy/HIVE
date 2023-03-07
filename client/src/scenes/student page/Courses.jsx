@@ -1,83 +1,139 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Button from '@mui/material/Button';
-import CameraIcon from '@mui/icons-material/PhotoCamera';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import CssBaseline from '@mui/material/CssBaseline';
-import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import * as React from "react";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Box, Container, Stack } from "@mui/system";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { Button, TextField } from "@mui/material";
+import axios from "axios";
+import AddLinkIcon from "@mui/icons-material/AddLink";
 
+export default function ControlledAccordions() {
+  const [publics, setPublics] = React.useState([]);
+  const [selectedPublic, setSelectedPublic] = React.useState("");
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  // handeling accordion
+  const [expanded, setExpanded] = React.useState(1);
+  const [accordionData, setAccordionData] = React.useState([]);
 
-const theme = createTheme();
+  const handleChange = (panel) => (event, isExpanded) => {
+    event.preventDefault();
+    setExpanded(isExpanded ? panel : false);
+  };
 
-export default function Courses() {
+  const AccordionData = () => {
+    axios
+      .get(
+        `http://localhost:5000/student/getScheduledClassById/${selectedPublic}`
+      )
+      .then((res) => {
+        console.log(res);
+        setAccordionData(res.data.scheduledClass);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  React.useEffect(() => {
+    axios.get("http://localhost:5000/student/getAllPublic").then((res) => {
+      setPublics(res.data.public);
+    });
+  }, []);
+
+  const handleChangePublic = (event) => {
+    // event.preventDefault();
+    setSelectedPublic(event.target.value);
+    AccordionData();
+  };
+
   return (
-  
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <h2 style={{textAlign: 'center'}}>Courses</h2>
-      <main>
-        <Container sx={{ py: 8 }} maxWidth="md">
-          {/* End hero unit */}
-          <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
-                <Card
-                  sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+    <Container component="main" maxWidth="md">
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ width: "100%", mb: 2 }}
+      >
+        <Box>
+          <Typography variant="h6" color="initial">
+            Scheduled Classes
+          </Typography>
+        </Box>
+
+        <Box>
+          <FormControl sx={{ width: 200 }}>
+            <TextField
+              variant="outlined"
+              select
+              label="Select Public"
+              name="public"
+              sx={{ width: "100%" }}
+              onChange={handleChangePublic}
+              size="small"
+            >
+              {publics.map((item, val) => {
+                return <MenuItem value={item._id}>{item.fullName}</MenuItem>;
+              })}
+            </TextField>
+          </FormControl>
+        </Box>
+      </Stack>
+      <Box>
+        {/* <ClassAccordion selectedPublic={selectedPublic} handleChangePublic={handleChangePublic}/> */}
+        {accordionData.map((item, val) => {
+          return (
+            <Accordion
+              expanded={expanded === item._id}
+              onChange={handleChange(item._id)}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1bh-content"
+                id="panel1bh-header"
+              >
+                <Typography sx={{ width: "43%", flexShrink: 0 }}>
+                  {item.title}
+                </Typography>
+                <Typography
+                  sx={{ width: "33%", color: "text.secondary", flexShrink: 0 }}
                 >
-                  <CardMedia
-                    component="img"
-                    sx={{
-                      height: '10rem'
-                    }}
-                    image="https://source.unsplash.com/random"
-                    alt="random"
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      Heading
-                    </Typography>
-                    <Typography>
-                      This is a media card. You can use this section to describe the
-                      content.
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small" variant='outlined'>View</Button>
-                    <Button size="small" variant='contained'>Edit</Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </main>
-      {/* Footer */}
-      <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
-        <Typography variant="h6" align="center" gutterBottom>
-          Footer
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="text.secondary"
-          component="p"
-        >
-          Something here to give the footer a purpose!
-        </Typography>
+                  {item.date}
+                </Typography>
+                <Typography sx={{ color: "text.secondary" }}>
+                  {item.time}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Box>Online Meeting Link</Box>
+                  <Box>
+                    <a
+                      href={`/${item.meetLink}`}
+                      target="_blank"
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Button
+                        startIcon={<AddLinkIcon />}
+                        sx={{ color: "text.secondary" }}
+                      >
+                        {item.meetLink}
+                      </Button>
+                    </a>
+                  </Box>
+                </Stack>
+              </AccordionDetails>
+            </Accordion>
+          );
+        })}
       </Box>
-      {/* End footer */}
-    </ThemeProvider>
+    </Container>
   );
 }

@@ -4,7 +4,8 @@ const PORT = 5000;
 const connect = require("./mongodb/config.js");
 const userRouter = require("./routers/UserRouter.js");
 const publicRouter = require("./routers/PublicRouter.js");
-const adminRouter = require("./routers/adminRouter")
+const adminRouter = require("./routers/adminRouter.js")
+const studentRouter = require('./routers/studentRouter.js')
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
@@ -21,7 +22,8 @@ app.get("/", (req, res) => {
 
 app.use("/user", userRouter);
 app.use("/public", publicRouter);
-app.use('/admin', adminRouter)
+app.use('/admin', adminRouter);
+app.use('/student', studentRouter);
 
 app.listen(PORT, () => {
   console.log("Server Running");

@@ -7,9 +7,9 @@ import SnackBar from "./components/snackbar/Snackbar";
 function App() {
   return (
     <>
-        <Navbar />
-        <SnackBar />
-        <Outlet />
+      <Navbar />
+      <SnackBar />
+      <Outlet />
     </>
   );
 }
