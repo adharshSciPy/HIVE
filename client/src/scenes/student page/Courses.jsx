@@ -26,10 +26,10 @@ export default function ControlledAccordions() {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const AccordionData = () => {
+  const AccordionData = (key) => {
     axios
       .get(
-        `http://localhost:5000/student/getScheduledClassById/${selectedPublic}`
+        `http://localhost:5000/student/getScheduledClassById/${key}`
       )
       .then((res) => {
         console.log(res);
@@ -47,7 +47,7 @@ export default function ControlledAccordions() {
   const handleChangePublic = (event) => {
     // event.preventDefault();
     setSelectedPublic(event.target.value);
-    AccordionData();
+    AccordionData(selectedPublic);
   };
 
   return (

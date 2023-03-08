@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
-import {Link as RouterLink} from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -29,6 +29,8 @@ import { toast } from 'react-toastify';
 
 export default function SignUp() {
 
+
+  // new Logics
   const [student, setStudent] = useState(false)
   const [role, setrole] = useState('')
   const [date, setDate] = React.useState('');
@@ -49,186 +51,316 @@ export default function SignUp() {
   const handleDate = (newValue) => {
     setDate(newValue);
   };
+  const [formData, setFormData] = useState({
+    fullName: '',
+    role: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    gender: '',
+    dob: '',
+    college: '',
+    course: ''
+  });
+  const [formErrors, setFormErrors] = useState({});
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-
-    axios.post('http://localhost:5000/user/register', {
-      fullName: data.get('fullName'),
-      role: data.get('role'),
-      email: data.get('email'),
-      password: data.get('password'),
-      gender: data.get('gender'),
-      dob: data.get('date'),
-      college: data.get('college'),
-      course: data.get('course')
-    })
-      .then((res) => {
-        toast.success(res.data.message, {
-          position: toast.POSITION.TOP_CENTER,
-        });
-        navigate('/login')
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+  // inputs onChange handler
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
 
+  // form validation
+  const validateFormData = (data) => {
+    const errors = {};
+
+    // Full Name validation
+    if (!data.fullName) {
+      errors.fullName = 'Full Name is required';
+    } else if (!/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/.test(data.fullName)) {
+      errors.fullName = 'Full Name is invalid';
+    }
+    else {
+      errors.fullName = ''
+    }
+
+    // Email validation
+    if (!data.email) {
+      errors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+      errors.email = 'Email is invalid';
+    }
+    else {
+      errors.email = ''
+    }
+
+    // Password validation
+    if (!data.password) {
+      errors.password = 'Password is required';
+    } else if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(data.password)) {
+      errors.password = 'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number';
+    }
+    else {
+      errors.password = ''
+    }
+
+    // Confirm Password validation
+    if (!data.confirmPassword) {
+      errors.confirmPassword = 'Confirm Password is required';
+    }
+    else if (data.password !== data.confirmPassword) {
+      errors.confirmPassword = 'Passwords do not match';
+    }
+    else {
+      errors.confirmPassword = ''
+    }
+
+    if (student) {
+      //  gender validation
+      if (!data.gender) {
+        errors.gender = 'Gender is required';
+      }
+      else {
+        errors.gender = ''
+      } 
+
+      // // dob gender validation
+      // if (!data.dob) {
+      //   errors.dob = 'Date of Birth is required';
+      // }
+      // else {
+      //   errors.dob = ''
+      // }
+
+      // college gender validation
+      if (!data.college) {
+        errors.college = 'College Name is required';
+      }
+      else {
+        errors.college = ''
+      }
+
+      // course gender validation
+      if (!data.course) {
+        errors.course = 'Course Name is required';
+      }
+      else {
+        errors.course = ''
+      }
+    }
+    return errors;
+  };
+
+  // forms submission
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log('clicked submit')
+    const errors = validateFormData(formData);
+    if (Object.keys(errors).length === 0) {
+      console.log('No errors')
+
+
+      // submit the form
+      axios.post('http://localhost:5000/user/register', {
+        fullName: formData.fullName,
+        role: formData.role,
+        email: formData.email,
+        password: formData.password,
+        gender: formData.gender,
+        dob: formData.dob,
+        college: formData.college,
+        course: formData.course,
+      })
+        .then((res) => {
+          toast.success(res.data.message, {
+            position: toast.POSITION.TOP_CENTER,
+          });
+          navigate('/login')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+    else {
+      setFormErrors(errors);
+    }
+  };
+
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="fullName"
-                  required
-                  fullWidth
-                  id="fullname"
-                  label="Full Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  variant="outlined"
-                  select
-                  label="Role"
-                  name='role'
-                  sx={{ width: '100%' }}
-                  onChange={handleChange}
-                >
-                  <MenuItem value='student'>Student</MenuItem>
-                  <MenuItem value='public'>Public</MenuItem>
-                </TextField>
-              </Grid>
 
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  name="confirm password"
-                  label="Confirm Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-              {
-                student ? (
-                  <>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        variant="outlined"
-                        select
-                        label="Gender"
-                        name='gender'
-                        sx={{ width: '100%' }}
-                      >
-                        <MenuItem value='male'>Male</MenuItem>
-                        <MenuItem value='female'>Female</MenuItem>
-                      </TextField>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DesktopDatePicker
-                          label="Date of Birth"
-                          inputFormat="DD/MM/YYYY"
-                          value={date}
-                          onChange={handleDate}
-                          renderInput={(params) => <TextField {...params}  name="date"/>}
-                       
-                        />
-                      </LocalizationProvider>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <TextField
-                        autoComplete="college-name"
-                        name="college"
-                        required
-                        fullWidth
-                        id="college"
-                        label="College Name"
-                        autoFocus
-                      />
-
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        autoComplete="course"
-                        name="course"
-                        required
-                        fullWidth
-                        id="course"
-                        label="Course"
-                        autoFocus
-                      />
-                    </Grid>
-                  </>
-                ) : ''
-              }
-
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Sign up
+        </Typography>
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Full Name"
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleInputChange}
+                error={!!formErrors.fullName}
+                helperText={formErrors.fullName}
+                required
+                autoFocus
+                fullWidth
+              />
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Create Account
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                select
+                label="Role"
+                name='role'
+                sx={{ width: '100%' }}
+                onChange={handleChange}
+              >
+                <MenuItem value='student'>Student</MenuItem>
+                <MenuItem value='public'>Public</MenuItem>
+              </TextField>
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                label="Email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                error={!!formErrors.email}
+                helperText={formErrors.email}
+                required
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Password"
+                name="password"
+                type="text"
+                value={formData.password}
+                onChange={handleInputChange}
+                error={!!formErrors.password}
+                helperText={formErrors.password}
+                required
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Confirm Password"
+                name="confirmPassword"
+                type="text"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                error={!!formErrors.confirmPassword}
+                helperText={formErrors.confirmPassword}
+                fullWidth
+              />
+            </Grid>
+
+
+            {
+              student ? (
+                <>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      variant="outlined"
+                      select
+                      label="Gender"
+                      name='gender'
+                      sx={{ width: '100%' }}
+                      value={formData.gender}
+                      onChange={handleInputChange}
+                      error={!!formErrors.gender}
+                      helperText={formErrors.gender}
+                    >
+                      <MenuItem value='male'>Male</MenuItem>
+                      <MenuItem value='female'>Female</MenuItem>
+                    </TextField>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DesktopDatePicker
+                        label="Date of Birth"
+                        inputFormat="DD/MM/YYYY"
+                        value={date}
+                        onChange={handleDate}
+                        renderInput={(params) => <TextField color="primary" {...params} name="date" value={formData.dob} />}
+
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      autoComplete="college-name"
+                      name="college"
+                      required
+                      fullWidth
+                      id="college"
+                      label="College Name"
+                      value={formData.college}
+                      onChange={handleInputChange}
+                      error={!!formErrors.college}
+                      helperText={formErrors.college}
+                    />
+                  </Grid>
+
+
+                  <Grid item xs={12}>
+                    <TextField
+                      autoComplete="course"
+                      name="course"
+                      required
+                      fullWidth
+                      id="course"
+                      label="Course"
+                      value={formData.course}
+                      onChange={handleInputChange}
+                      error={!!formErrors.course}
+                      helperText={formErrors.course}
+                    />
+                  </Grid>
+                </>
+              ) : ''
+            }
+
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Create Account
+          </Button>
+          <Grid container justifyContent="flex-end">
+            <Grid item>
               <RouterLink to="/login">
                 <Link component="span" variant="body2">
                   {"Already have an account? Sign In"}
                 </Link>
               </RouterLink>
-              </Grid>
             </Grid>
-          </Box>
+          </Grid>
         </Box>
-      </Container>
-    </ThemeProvider>
+      </Box>
+    </Container>
   );
 }
