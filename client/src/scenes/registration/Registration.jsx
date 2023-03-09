@@ -32,7 +32,7 @@ export default function SignUp() {
 
   // new Logics
   const [student, setStudent] = useState(false)
-  const [role, setrole] = useState('')
+  const [role, setRole] = useState('')
   const [date, setDate] = React.useState('');
 
   const theme = createTheme();
@@ -41,10 +41,12 @@ export default function SignUp() {
 
   const handleChange = (event) => {
     if (event.target.value === 'student') {
+      setRole('student')
       setStudent(true)
     }
     else {
       setStudent(false)
+      setRole('public')
     }
   }
 
@@ -81,9 +83,6 @@ export default function SignUp() {
     } else if (!/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/.test(data.fullName)) {
       errors.fullName = 'Full Name is invalid';
     }
-    else {
-      errors.fullName = ''
-    }
 
     // Email validation
     if (!data.email) {
@@ -91,9 +90,7 @@ export default function SignUp() {
     } else if (!/\S+@\S+\.\S+/.test(data.email)) {
       errors.email = 'Email is invalid';
     }
-    else {
-      errors.email = ''
-    }
+
 
     // Password validation
     if (!data.password) {
@@ -101,9 +98,7 @@ export default function SignUp() {
     } else if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(data.password)) {
       errors.password = 'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number';
     }
-    else {
-      errors.password = ''
-    }
+
 
     // Confirm Password validation
     if (!data.confirmPassword) {
@@ -112,18 +107,14 @@ export default function SignUp() {
     else if (data.password !== data.confirmPassword) {
       errors.confirmPassword = 'Passwords do not match';
     }
-    else {
-      errors.confirmPassword = ''
-    }
+
 
     if (student) {
       //  gender validation
       if (!data.gender) {
         errors.gender = 'Gender is required';
       }
-      else {
-        errors.gender = ''
-      } 
+
 
       // // dob gender validation
       // if (!data.dob) {
@@ -137,17 +128,13 @@ export default function SignUp() {
       if (!data.college) {
         errors.college = 'College Name is required';
       }
-      else {
-        errors.college = ''
-      }
+
 
       // course gender validation
       if (!data.course) {
         errors.course = 'Course Name is required';
       }
-      else {
-        errors.course = ''
-      }
+
     }
     return errors;
   };
@@ -155,16 +142,15 @@ export default function SignUp() {
   // forms submission
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('clicked submit')
     const errors = validateFormData(formData);
+    setFormErrors(errors)
     if (Object.keys(errors).length === 0) {
       console.log('No errors')
-
 
       // submit the form
       axios.post('http://localhost:5000/user/register', {
         fullName: formData.fullName,
-        role: formData.role,
+        role,
         email: formData.email,
         password: formData.password,
         gender: formData.gender,
@@ -184,6 +170,10 @@ export default function SignUp() {
     }
     else {
       setFormErrors(errors);
+      console.log('Error Found in form')
+      toast.error('Form Validation Failed', {
+        position: toast.POSITION.TOP_CENTER,
+      });
     }
   };
 
@@ -226,6 +216,7 @@ export default function SignUp() {
                 select
                 label="Role"
                 name='role'
+                value={role}
                 sx={{ width: '100%' }}
                 onChange={handleChange}
               >
@@ -301,7 +292,7 @@ export default function SignUp() {
                         inputFormat="DD/MM/YYYY"
                         value={date}
                         onChange={handleDate}
-                        renderInput={(params) => <TextField color="primary" {...params} name="date" value={formData.dob} />}
+                        renderInput={(params) => <TextField color="primary" {...params} name="date" value={formData.dob} fullWidth />}
 
                       />
                     </LocalizationProvider>

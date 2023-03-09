@@ -34,62 +34,104 @@ export default function SignIn() {
   const navigate = useNavigate();
   const role = useSelector((state) => state.auth.role);
 
+
+  const [formData, setFormData] = React.useState({
+    email: '',
+    password: ''
+  })
+  const [formErrors, setFormErrors] = React.useState({})
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const validateFormData = (data) => {
+    const errors = {};
+
+    // Email validation
+    if (!data.email) {
+      errors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+      errors.email = 'Email is invalid';
+    }
+
+
+    // Password validation
+    if (!data.password) {
+      errors.password = 'Password is required';
+    } else if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(data.password)) {
+      errors.password = 'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number';
+    }
+
+    return errors;
+
+  }
+
   // submit function
   const HandleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    const errors = validateFormData(formData);
+    setFormErrors(errors)
+    if (Object.keys(errors).length === 0) {
+      console.log('No errors')
 
-    axios
-      .post("http://localhost:5000/user/login", {
-        email: data.get("email"),
-        password: data.get("password"),
-      })
-      .then((res) => {
-        toast.success(res.data.message, {
-          position: toast.POSITION.TOP_CENTER,
+      axios
+        .post("http://localhost:5000/user/login", {
+          email: formData.email,
+          password: formData.password,
+        })
+        .then((res) => {
+          toast.success(res.data.message, {
+            position: toast.POSITION.TOP_CENTER,
+          });
+          const { token, user } = res.data;
+
+          Cookie.set("Token", token);
+          const userData = (user._id)
+          const userName = (user.fullName)
+
+          // alert(userData)
+          dispatch(setUser(userData))
+          dispatch(setUserName(userName))
+
+          // switching routers
+          setTimeout(() => {
+            switch (res.data.user.role) {
+              case "student":
+                navigate("/student");
+                // dispatch(setUser(true));  
+                dispatch(setStudent());
+                break;
+
+              case "public":
+                navigate("/public");
+                // dispatch(setUser(true));
+                dispatch(setPublic());
+                break;
+
+              case "admin":
+                navigate("/admin");
+                // dispatch(setUser(true));
+                dispatch(setAdmin());
+                break;
+
+              default:
+                alert("Enter role");
+            }
+          }, 2000);
+
+          console.log(res);
+        })
+        .catch((err) => {
+          // console.log(err.response.data.message)
+          toast.error(err.response.data.message, {});
         });
-        const { token, user } = res.data;
-
-        Cookie.set("Token", token);
-        const userData = (user._id)
-        const userName = (user.fullName)
-
-        // alert(userData)
-        dispatch(setUser(userData))
-        dispatch(setUserName(userName))
-
-        // switching routers
-        setTimeout(() => {
-          switch (res.data.user.role) {
-            case "student":
-              navigate("/student");
-              // dispatch(setUser(true));  
-              dispatch(setStudent());
-              break;
-
-            case "public":
-              navigate("/public");
-              // dispatch(setUser(true));
-              dispatch(setPublic());
-              break;
-
-            case "admin":
-              navigate("/admin");
-              // dispatch(setUser(true));
-              dispatch(setAdmin());
-              break;
-
-            default:
-              alert("Enter role");
-          }
-        }, 2000);
-
-        console.log(res);
-      })
-      .catch((err) => {
-        // console.log(err.response.data.message)
-        toast.error(err.response.data.message, {});
+    }
+    else {
+      toast.error('Form Validation Failed', {
+        position: toast.POSITION.TOP_CENTER,
       });
+    }
   };
 
   return (
@@ -123,8 +165,10 @@ export default function SignIn() {
               id="email"
               label="Email Address"
               name="email"
-              autoComplete="email"
-              autoFocus
+              value={formData.email}
+              onChange={handleInputChange}
+              error={!!formErrors.email}
+              helperText={formErrors.email}
             />
             <TextField
               margin="normal"
@@ -133,8 +177,10 @@ export default function SignIn() {
               name="password"
               label="Password"
               type="password"
-              id="password"
-              autoComplete="current-password"
+              value={formData.password}
+              onChange={handleInputChange}
+              error={!!formErrors.password}
+              helperText={formErrors.password}
             />
 
             <Button
@@ -147,11 +193,11 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item>
-              <RouterLink to="/register">
-                <Link component="span" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </RouterLink>
+                <RouterLink to="/register">
+                  <Link component="span" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </RouterLink>
               </Grid>
             </Grid>
           </Box>
