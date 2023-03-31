@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useState, useEffect} from 'react';
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import {
@@ -27,38 +27,40 @@ function ClassShedule() {
   const [title, setTitle] = React.useState("");
   const [time, setTime] = React.useState("");
   const [meetLink, setMeetLink] = React.useState("");
-  const [file, setFile] = React.useState(null);
+  const [singleFile, setSingleFile] = useState('');
   const [value, setValue] = React.useState(dayjs("03-02-2023"));
 
   const userID = useSelector(state => state.auth.user);
+
+//image upload frontend progressing 
+
+
+
 
 
   const handleDate = (newValue) => {
     setValue(newValue);
   };
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+  // const handleFileChange = (e) => {
+  //   setFile(e.target.files[0]);
+  // };
+  const SingleFileChange = (e) => {
+    setSingleFile(e.target.files[0]);
+    
+}
   const HandleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-
-    console.log(data);
-    console.log(file)
-
+    const data = new FormData();
+    data.append('file', singleFile);
+    data.append('userID', userID)
+    data.append('title', title)
+    data.append('time',  time)
+    data.append('meetLink', meetLink)
+    data.append('date', value)
+  console.log(data);
+  
     axios
-      .post("http://localhost:5000/public/scheduleClass", {
-        // headers: {
-        //   "content-type": "application/json",
-        //   "Authorization": `Bearer ${Token}`,
-        // },
-        userID: userID,
-        title: data.get("title"),
-        time: data.get("time"),
-        meetLink: data.get("meetLink"),
-        date: data.get("date"),
-        pdf: file,
-      })
+      .post("http://localhost:5000/public/scheduleClass",data)
       .then((res) => {
         toast.success(res.data.message, {
           position: toast.POSITION.TOP_CENTER,
@@ -73,6 +75,7 @@ function ClassShedule() {
         console.error(err);
       });
   };
+  
 
   return (
     <>
@@ -170,12 +173,7 @@ function ClassShedule() {
                   sx={{ minWidth: "100%", margin: ".5rem 0" }}
                 >
                   Upload PDF
-                  <input
-                    type="file"
-                    name="pdf"
-                    hidden
-                    onChange={handleFileChange}
-                  />
+                  <input type="file" className="file" onChange={(e) => SingleFileChange(e)} />
                 </Button>
 
                 {/* <TextField

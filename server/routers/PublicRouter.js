@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const publicController = require("../controllers/PublicController");
-const multerConfig = require("../multer/config");
+const {upload} = require("../multer/config");
 
 
 router.post(
   "/scheduleClass",
-  multerConfig.upload.single("pdf"),
+  upload.single('file'),
   publicController.scheduleClass
 );
 

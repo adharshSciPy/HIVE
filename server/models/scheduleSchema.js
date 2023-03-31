@@ -25,9 +25,7 @@ const ScheduleSchema = new Schema({
     type: String,
   },
 
-  pdfName: {
-    type: String,
-  },
+  pdfName: [Object],
 
   status: {
     type: Boolean,

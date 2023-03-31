@@ -1,18 +1,33 @@
 const ScheduleSchema = require("../models/scheduleSchema");
 const PostSchema = require("../models/postSchema");
+const SingleFile = require("../models/multiplefile")
 const jwt = require("jsonwebtoken");
+const fileSizeFormatter = require('./fileformat')
+
+
 
 module.exports = {
   scheduleClass: async (req, res, next) => {
     const { title, date, time, meetLink, userID } = req.body;
+    console.log(req.file);
     try {
+      const file = new SingleFile({
+        fileName: req.file.originalname,
+        filePath: req.file.path,
+        fileType: req.file.mimetype,
+        fileSize: fileSizeFormatter(req.file.size, 2) // 0.00
+    });
+      
+     
+
+
       const scheduleData = await ScheduleSchema.create({
         ownerID: userID,
         title,
         time,
         date,
         meetLink,
-        pdfName: "Demo pdf",
+        pdfName: file,
         status: true,
       });
       if (!scheduleData) {
