@@ -19,3 +19,6 @@ code {
   text-decoration: none;
 }
 
+::-webkit-scrollbar{
+  display: none;
+}

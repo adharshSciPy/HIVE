@@ -58,6 +58,10 @@ function DrawerAppBar(props) {
       title: "Posts",
       link: "/student/post",
     },
+    {
+      title: 'Chat',
+      link: '/chat'
+    }
   ];
 
   const publicNavItems = [
@@ -77,6 +81,10 @@ function DrawerAppBar(props) {
       title: "Certificate",
       link: "/public/certificateUpload",
     },
+    {
+      title: 'Chat',
+      link: '/chat'
+    }
   ];
 
   const adminNavItems = [
@@ -96,6 +104,10 @@ function DrawerAppBar(props) {
       title: "Posts",
       link: "/admin/adminPosts",
     },
+    {
+      title: 'Chat',
+      link: '/chat'
+    }
   ];
 
   // const Token = Cookies.get('Token')

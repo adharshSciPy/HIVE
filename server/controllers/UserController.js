@@ -9,7 +9,7 @@ module.exports = {
 
     try {
       // hashing password
-      const salt = bcrypt.genSaltSync(10)
+      const salt = bcrypt.genSaltSync(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
       // checking the user is existed or not with email
@@ -28,7 +28,7 @@ module.exports = {
         course,
       });
       res.status(200).json({ message: "User added to mongodb succesfully" });
-      next()
+      next();
     } catch (err) {
       res.status(500).json({ message: "Server Error" });
       console.log(`Server Error ${err}`);
@@ -55,27 +55,46 @@ module.exports = {
         expiresIn: "1h",
       });
       res.status(200).json({ message: "Logged In Succesfully", user, token });
-      next()
+      next();
     } catch (err) {
       res.status(500).json({ message: "Server Error" });
       console.log(`server Error ${err}`);
     }
   },
 
+  getAllUser: async (req, res) => {
+    try {
+      const allUsers = await User.find();
+      if (!allUsers) {
+        res.status(400).json({ message: "No users Found" });
+      } else {
+        const sortedUser = allUsers.map((user) => {
+          return {
+            userid: user._id,
+            fullName: user.fullName,
+            role: user.role,
+          };
+        });
+        res.status(200).json({ message: "Users Found", sortedUser });
+      }
+    } catch (err) {
+      res.status(500).json({ message: "Server Error" });
+      console.log(err);
+    }
+  },
 
   // verify token
   verifyToken: async (req, res) => {
-    const { token } = req.body
+    const { token } = req.body;
     try {
-      const verify = jwt.verify(token, "IamGreat")
+      const verify = jwt.verify(token, "IamGreat");
       if (!verify) {
-        res.status(400).json({ "message": "Verification failed" })
+        res.status(400).json({ message: "Verification failed" });
       }
-      res.status(200).json({ "message": "Verification Success" })
-    }
-    catch (err) {
-      res.status(500).json({ "message": "Server Error" })
-      console.log("Verification Error" + err)
+      res.status(200).json({ message: "Verification Success" });
+    } catch (err) {
+      res.status(500).json({ message: "Server Error" });
+      console.log("Verification Error" + err);
     }
   },
 
@@ -92,7 +111,7 @@ module.exports = {
       }
 
       res.status(200).json({ message: "Account Founded", user });
-      next()
+      next();
     } catch (err) {
       res.status(500).json({ message: "Server Error" });
     }
@@ -106,16 +125,24 @@ module.exports = {
 
     try {
       // hasing new password
-      const salt = await bcrypt.genSaltSync(10)
-      const newHashedPassword = await bcrypt.hash(newPassword, salt, (err, data) => console.log(err));
-      const updateUserPassword = await User.findByIdAndUpdate(id, {
-        password: newHashedPassword,
-      }, { new: true });
+      const salt = await bcrypt.genSaltSync(10);
+      const newHashedPassword = await bcrypt.hash(
+        newPassword,
+        salt,
+        (err, data) => console.log(err)
+      );
+      const updateUserPassword = await User.findByIdAndUpdate(
+        id,
+        {
+          password: newHashedPassword,
+        },
+        { new: true }
+      );
       if (!updateUserPassword) {
         res.status(400).json({ message: "User Id error" });
       }
       res.status(200).json({ message: "Password changed succesfully" });
-      next()
+      next();
     } catch (err) {
       res.status(500).json({ message: "Internal Server Error" });
       console.log(err);
@@ -128,12 +155,11 @@ module.exports = {
 
     try {
       if (!user) {
-        res.status(400).json({ message: 'User Not found' })
+        res.status(400).json({ message: "User Not found" });
       }
-      res.status(200).json({ message: "User found", user })
+      res.status(200).json({ message: "User found", user });
+    } catch (err) {
+      res.status(500).json({ message: "User Found" });
     }
-    catch (err) {
-      res.status(500).json({ message: 'User Found' })
-    }
-  }
+  },
 };
