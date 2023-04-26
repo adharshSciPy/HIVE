@@ -22,6 +22,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import PostTable from "../public page/PostTable";
+import { useEffect } from "react";
 
 const theme = createTheme();
 
@@ -34,6 +35,7 @@ export default function NewPost() {
   const [webinar, setWebinar] = React.useState(false);
   const [internship, setInternship] = React.useState(false);
   const [placement, setPlacement] = React.useState(false);
+  // const [value, setValue] = React.useState(dayjs("03-02-2023"));
 
   const handleChange = (event) => {
     setPostType(event.target.value);
@@ -60,37 +62,48 @@ export default function NewPost() {
     }
   };
 
-  const today = Date.now();
+  const now = new Date();
   const [title, setTitle] = React.useState("");
   const [price, setPrice] = React.useState("");
-  const [date, setDate] = React.useState(new Date());
-  const [time, setTime] = React.useState(new Date());
+  const [date, setDate] = React.useState(now.toLocaleDateString());
+  const [time, setTime] = React.useState(now.toLocaleDateString());
   const [location, setLocation] = React.useState("");
-  const [link, setLink] = React.useState("");
+  const [meetLink, setMeetLink] = React.useState("");
   const [salary, setSalary] = React.useState("");
   const [company, setCompany] = React.useState("");
   const [place, setPlace] = React.useState("");
+  const [singleFile, setSingleFile] = React.useState('');
+
 
   const handleDate = (newValue) => {
     setDate(newValue);
   };
 
-  const handleSubmit = (event) => {
+  const handleTime = (newValue) => {
+    setTime(newValue);
+  };
+
+  const SingleFileChange = (e) => {
+    setSingleFile(e.target.files[0]);
+  }
+
+  const HandleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    const data = new FormData();
+
+    data.append('file', singleFile);
+    data.append('userID', userID)
+    data.append('title', title)
+    data.append('postType', postType)
+    data.append('meetLink', meetLink)
+    data.append('company', company)
+    data.append('salary', salary)
+    data.append('date', date)
+    data.append('time', time)
+    console.log(data);
 
     axios
-      .post("http://localhost:5000/public/post", {
-        userID: userID,
-        title: data.get("title"),
-        postType: data.get("post-type"),
-        price: data.get("price"),
-        date: data.get("date"),
-        meetLink: data.get("meetlink"),
-        company: data.get("company"),
-        place: data.get("place"),
-        salary: data.get("salary"),
-      })
+      .post("http://localhost:5000/public/post", data)
       .then((res) => {
         toast.success(res.data.message, {
           position: toast.POSITION.TOP_CENTER,
@@ -98,9 +111,8 @@ export default function NewPost() {
         setTitle("");
         setPrice("");
         setPostType("");
-        // setDate("");
         setLocation("");
-        setLink("");
+        setMeetLink("");
         setSalary("");
         setCompany("");
         setPlace("");
@@ -121,7 +133,7 @@ export default function NewPost() {
         display="flex"
         direction={{ sm: "row", md: "column", lg: "column", lx: "column" }}
         justifyContent="space-between"
-        sx={{ p: 6, pt:1 }}
+        sx={{ p: 6, pt: 1 }}
       >
         <Card
           sx={{
@@ -135,19 +147,14 @@ export default function NewPost() {
           <Typography component="heading" variant="h6">
             Create New Post
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <form enctype="multipart/form-data" onSubmit={HandleSubmit}>
             <TextField
               variant="outlined"
               select
               maxWidth
               value={postType}
               label="Post-Type"
-              name="post-type"
+              name="postType"
               sx={{ width: "100%", mt: 1 }}
               size="small"
               onChange={handleChange}
@@ -214,18 +221,21 @@ export default function NewPost() {
             {jobFair ? (
               <>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <TimePicker
-                    label="Time"
+                  <DesktopDatePicker
+                    label="Date"
+                    inputFormat="DD/MM/YYYY"
                     value={time}
-                    onChange={(e) => setTime(e.target.value)}
+                    onChange={handleTime}
                     renderInput={(params) => (
                       <TextField
-                        size="small"
-                        sx={{ fontSize: "12px", mt: 1 }}
                         {...params}
+                        name="date"
+                        size="small"
+                        sx={{ minWidth: "100%", margin: ".5rem 0" }}
                         fullWidth
                       />
                     )}
+                    size="small"
                   />
                 </LocalizationProvider>
 
@@ -269,14 +279,14 @@ export default function NewPost() {
                   margin="normal"
                   required
                   fullWidth
-                  name="meetlink"
+                  name="meetLink"
                   label="Meet-link"
                   type="text"
-                  id="meetlink"
+                  id="meetLink"
                   size="small"
-                  value={link}
+                  value={meetLink}
                   onChange={(e) => {
-                    setLink(e.target.value);
+                    setMeetLink(e.target.value);
                   }}
                 />
               </>
@@ -336,6 +346,18 @@ export default function NewPost() {
             )}
 
             <Button
+              component="label"
+              margin="normal"
+              fullWidth
+              size="small"
+              variant="outlined"
+              sx={{ minWidth: "100%", margin: ".5rem 0" }}
+            >
+              <input type="file" className="file" onChange={(e) => SingleFileChange(e)} />
+            </Button>
+
+
+            <Button
               type="submit"
               fullWidth
               variant="contained"
@@ -343,7 +365,7 @@ export default function NewPost() {
             >
               Post
             </Button>
-          </Box>
+          </form>
         </Card>
 
         <Card
@@ -358,7 +380,7 @@ export default function NewPost() {
             <Typography variant="subtitle1" color="initial">
               Manage Posts
             </Typography>
-            <PostTable handleSubmit={handleSubmit} />
+            <PostTable handleSubmit={HandleSubmit} />
           </CardContent>
         </Card>
       </Box>

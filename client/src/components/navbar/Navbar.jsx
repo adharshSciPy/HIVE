@@ -28,13 +28,15 @@ function DrawerAppBar(props) {
   // navLink active status
   let activeStyle = {
     textDecoration: "none",
-    backgroundColor: "skyblue",
-    borderRadius: ".8rem",
+    backgroundColor: "#FFB4B4",
+    borderRadius: ".4rem",
+    minWidth: '4rem',
+    padding: '0.1rem',
+    fontColor: '#7f18c8'
   };
 
   let nonActiveStyle = {
     textDecoration: "none",
-    color: "red",
   };
 
   // customised functionalities
@@ -58,6 +60,10 @@ function DrawerAppBar(props) {
       title: "Posts",
       link: "/student/post",
     },
+    {
+      title: 'Chat',
+      link: "public/chat"
+    }
   ];
 
   const publicNavItems = [
@@ -77,6 +83,10 @@ function DrawerAppBar(props) {
       title: "Certificate",
       link: "/public/certificateUpload",
     },
+    {
+      title: 'Chat',
+      link: "public/chat"
+    }
   ];
 
   const adminNavItems = [
@@ -96,6 +106,10 @@ function DrawerAppBar(props) {
       title: "Posts",
       link: "/admin/adminPosts",
     },
+    {
+      title: 'Chat',
+      link: "public/chat"
+    }
   ];
 
   // const Token = Cookies.get('Token')
@@ -170,7 +184,7 @@ function DrawerAppBar(props) {
         <List>
           {adminNavItems.map((item, val) => (
             <ListItem key={val} disablePadding>
-              <ListItemButton sx={{ textAlign: "center" }} onClick={()=>navigate(item.link)}>
+              <ListItemButton sx={{ textAlign: "center" }} onClick={() => navigate(item.link)}>
                 <ListItemText primary={item.title} />
               </ListItemButton>
             </ListItem>
@@ -179,16 +193,16 @@ function DrawerAppBar(props) {
       )}
 
       {
-        role === 'public' && 
+        role === 'public' &&
         <List>
-        {publicNavItems.map((item, val) => (
-          <ListItem key={val} disablePadding>
-            <ListItemButton sx={{ textAlign: "center" }}  onClick={()=>navigate(item.link)}>
-              <ListItemText primary={item.title} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+          {publicNavItems.map((item, val) => (
+            <ListItem key={val} disablePadding>
+              <ListItemButton sx={{ textAlign: "center" }} onClick={() => navigate(item.link)}>
+                <ListItemText primary={item.title} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
       }
 
       {/* profile ui while student Login */}
@@ -226,7 +240,7 @@ function DrawerAppBar(props) {
           >
             HIVE
           </Typography>
-{/* 
+          {/* 
           <Typography variant="subtitle1 " color="white" sx={{mr: 7}}>
             welcome {userName}
           </Typography> */}

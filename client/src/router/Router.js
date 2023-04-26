@@ -15,6 +15,7 @@ import CertificateUpload from "../scenes/public page/CertificateUpload";
 import AdminPublics from "../scenes/admin page/AdminPublics";
 import AdminStudents from "../scenes/admin page/AdminStudent";
 import AdminPosts from "../scenes/admin page/AdminPosts";
+import Chat from "../scenes/chat/Chat"
 
 export const router = createBrowserRouter([
   {
@@ -70,6 +71,15 @@ export const router = createBrowserRouter([
               </CheckAuth>
             ),
           },
+
+          {
+            path: "/admin/chat",
+            element: (
+              <CheckAuth>
+                <Chat />
+              </CheckAuth>
+            ),
+          },
         ],
       },
       {
@@ -96,6 +106,15 @@ export const router = createBrowserRouter([
             element: (
               <CheckAuth>
                 <Post />
+              </CheckAuth>
+            ),
+          },
+
+          {
+            path: "/student/chat",
+            element: (
+              <CheckAuth>
+                <Chat />
               </CheckAuth>
             ),
           },
@@ -133,6 +152,15 @@ export const router = createBrowserRouter([
             element: (
               <CheckAuth>
                 <NewPost />
+              </CheckAuth>
+            ),
+          },
+
+          {
+            path: "/public/chat",
+            element: (
+              <CheckAuth>
+                <Chat />
               </CheckAuth>
             ),
           },

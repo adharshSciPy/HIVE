@@ -43,6 +43,8 @@ const PostSchema = new Schema({
     type: Boolean
   },
 
+  imageName : [Object],
+
   createdAt: { type: Date, default: Date.now },
 });
 

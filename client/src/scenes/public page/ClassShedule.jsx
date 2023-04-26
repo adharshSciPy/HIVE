@@ -69,6 +69,7 @@ function ClassShedule() {
           setTime("");
           setTitle("");
           setMeetLink("");
+          setSingleFile('')
         }, 400);
       })
       .catch((err) => {
@@ -172,8 +173,7 @@ function ClassShedule() {
                   variant="outlined"
                   sx={{ minWidth: "100%", margin: ".5rem 0" }}
                 >
-                  Upload PDF
-                  <input type="file" className="file" onChange={(e) => SingleFileChange(e)} />
+                  <input type="file" className="file"  onChange={(e) => SingleFileChange(e)} />
                 </Button>
 
                 {/* <TextField

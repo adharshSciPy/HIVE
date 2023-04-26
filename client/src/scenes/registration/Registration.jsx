@@ -12,7 +12,6 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { InputLabel, MenuItem } from '@mui/material';
@@ -35,7 +34,6 @@ export default function SignUp() {
   const [role, setRole] = useState('')
   const [date, setDate] = React.useState('');
 
-  const theme = createTheme();
   const navigate = useNavigate()
 
 
