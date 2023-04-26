@@ -17,6 +17,7 @@ import AdminStudents from "../scenes/admin page/AdminStudent";
 import AdminPosts from "../scenes/admin page/AdminPosts";
 import Chat from "../scenes/chat/Chat"
 
+
 export const router = createBrowserRouter([
   {
     element: <App />,
@@ -165,6 +166,10 @@ export const router = createBrowserRouter([
             ),
           },
         ],
+      },
+      {
+        path: "/chat",
+        element: <Chat />,
       },
     ],
   },

@@ -62,7 +62,7 @@ function DrawerAppBar(props) {
     },
     {
       title: 'Chat',
-      link: "public/chat"
+      link: '/chat'
     }
   ];
 
@@ -85,7 +85,7 @@ function DrawerAppBar(props) {
     },
     {
       title: 'Chat',
-      link: "public/chat"
+      link: '/chat'
     }
   ];
 
@@ -108,7 +108,7 @@ function DrawerAppBar(props) {
     },
     {
       title: 'Chat',
-      link: "public/chat"
+      link: '/chat'
     }
   ];
 

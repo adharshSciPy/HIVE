@@ -10,6 +10,7 @@ const userRouter = require("./routers/UserRouter.js");
 const publicRouter = require("./routers/PublicRouter.js");
 const adminRouter = require("./routers/adminRouter.js")
 const studentRouter = require('./routers/studentRouter.js')
+const chatRoute = require('./routers/chatRoute.js')
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
@@ -28,6 +29,7 @@ app.use("/user", userRouter);
 app.use("/public", publicRouter);
 app.use('/admin', adminRouter);
 app.use('/student', studentRouter);
+app.use('/chat', chatRoute)
 
 // chat socket.io logic
 // Socket.io chat
