@@ -7,7 +7,7 @@ module.exports = {
     try {
       const newMessage = await MessageSchema.create({
         message: message,
-        chatUsers: [from, to],
+        chatUsers: [from, to],    
         sender: from,
       });
 
@@ -22,6 +22,7 @@ module.exports = {
   getAllMessages: async (req, res) => {
     const from = req.params.sender;
     const to = req.params.receiver;
+    console.log(from, to)
 
     try {
       const newMessage = await MessageSchema.find({
@@ -30,17 +31,17 @@ module.exports = {
         },
       }).sort({ updatedAt: -1 });
 
-      console.log(newMessage);
 
       const allMessage = newMessage.map((msg) => {
+        console.log(msg.sender)
         return {
           mySelf: msg.sender.toString() === from,
           message: msg.message,
         };
       });
 
-      res.status(200).json({ message: "Get All Messages", allMessage });
       console.log("respond success");
+      return res.status(200).json({ message: "Get All Messages", allMessage });
     } catch (err) {
       console.log(err);
       res.status(500).json({ message: "Server Error" });

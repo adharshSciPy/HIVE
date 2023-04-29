@@ -13,8 +13,8 @@ const MessageSchema = new Schema({
   },
 
   sender: {
-    type: mongoose.Types.ObjectId,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    require: true,
   },
 
   createdAt: { type: Date, default: Date.now },

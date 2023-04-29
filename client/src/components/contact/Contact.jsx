@@ -23,6 +23,7 @@ import ChatContainer from "../chat container/ChatContainer";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+
 function Contact() {
   const [users, setUsers] = useState([]);
   const [selectUser, setSelectUser] = useState();
@@ -99,7 +100,10 @@ function Contact() {
       </Grid>
 
       <Grid item xs={6} md={8}>
-        <ChatContainer selectUser={selectUser} />
+        {
+          selectUser?.userid !== '' ? <ChatContainer selectUser={selectUser} /> : <p>Select any User to chat</p>
+        }
+
       </Grid>
     </Grid>
   );
