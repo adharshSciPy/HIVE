@@ -21,6 +21,10 @@ export default function ControlledAccordions() {
   const [expanded, setExpanded] = React.useState(1);
   const [accordionData, setAccordionData] = React.useState([]);
 
+  React.useEffect(() => {
+    console.log(accordionData.length)
+  }, [])
+
   const handleChange = (panel) => (event, isExpanded) => {
     event.preventDefault();
     setExpanded(isExpanded ? panel : false);
@@ -34,6 +38,7 @@ export default function ControlledAccordions() {
       .then((res) => {
         console.log(res);
         setAccordionData(res.data.scheduledClass);
+        console.log(accordionData.length)
       })
       .catch((err) => console.log(err));
   };
@@ -45,9 +50,10 @@ export default function ControlledAccordions() {
   }, []);
 
   const handleChangePublic = (event) => {
-    // event.preventDefault();
-    setSelectedPublic(event.target.value);
-    AccordionData(selectedPublic);
+    event.preventDefault();
+    const newSelectedPublic = event.target.value;
+    setSelectedPublic(newSelectedPublic);
+    AccordionData(newSelectedPublic);
   };
 
   return (
@@ -134,6 +140,8 @@ export default function ControlledAccordions() {
           );
         })}
       </Box>
+
+      <Box>hello</Box>
     </Container>
   );
 }

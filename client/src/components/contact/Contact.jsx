@@ -11,7 +11,7 @@ import {
   ListItemText,
   ListItemAvatar,
   ListItemButton,
-  Grid,
+  Grid, Typography,
 } from "@mui/material";
 
 import ImageIcon from "@mui/icons-material/Image";
@@ -27,6 +27,7 @@ import axios from "axios";
 function Contact() {
   const [users, setUsers] = useState([]);
   const [selectUser, setSelectUser] = useState();
+  const [color, setColor] = useState(true)
 
   const fetchAllUsers = () => {
     axios
@@ -79,7 +80,7 @@ function Contact() {
           <List sx={{ width: "100%", bgcolor: "background.paper" }}>
             {users.map((item, val) => {
               return (
-                <ListItemButton key={val} onClick={() => handleClick(item)}>
+                <ListItemButton key={val} onClick={() => handleClick(item)} sx={{backgroundColor: selectUser?.userid === item.userid ? '#F6F8FA' : ''}}>
                   <ListItem sx={{ maxHeight: "3rem" }}>
                     <ListItemAvatar>
                       <Avatar
@@ -99,9 +100,13 @@ function Contact() {
         </Box>
       </Grid>
 
-      <Grid item xs={6} md={8}>
+      <Grid item xs={6} md={8} sx={{ alignItems: 'center', justifyContent: 'center' }}>
         {
-          selectUser?.userid !== '' ? <ChatContainer selectUser={selectUser} /> : <p>Select any User to chat</p>
+          selectUser?.userid !== undefined ? <ChatContainer selectUser={selectUser} /> :
+            <Box sx={{ height: '85%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+              <img src="https://media.istockphoto.com/id/587805156/vector/profile-picture-vector-illustration.jpg?s=612x612&w=0&k=20&c=gkvLDCgsHH-8HeQe7JsjhlOY6vRBJk_sKW9lyaLgmLo=" alt="" width="250px" height='250px' />
+              <Typography variant="h5" color="primary" sx={{ fontWeight: '600' }}>Select an user to chat</Typography>
+            </Box>
         }
 
       </Grid>
