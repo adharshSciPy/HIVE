@@ -10,6 +10,10 @@ const PostSchema = new Schema({
     required: true,
   },
 
+  applied: {
+    type: Array
+  },
+
   title: {
     type: String,
     required: true,
@@ -25,7 +29,7 @@ const PostSchema = new Schema({
   },
 
   date: {
-    type: String,
+    type: Date,
   },
 
   meetLink: {

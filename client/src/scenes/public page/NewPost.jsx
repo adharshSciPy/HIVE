@@ -39,19 +39,22 @@ export default function NewPost() {
 
   const handleChange = (event) => {
     setPostType(event.target.value);
-    if (event.target.value === "job-fair") {
+  };
+
+  React.useEffect(() => {
+    if (postType === "job-fair") {
       setJobFair(true);
       setWebinar(false);
       setInternship(false);
-    } else if (event.target.value === "webinar") {
+    } else if (postType === "webinar") {
       setJobFair(false);
       setWebinar(true);
       setInternship(false);
-    } else if (event.target.value === "internship") {
+    } else if (postType === "internship") {
       setJobFair(false);
       setWebinar(false);
       setInternship(true);
-    } else if (event.target.value === "placement") {
+    } else if (postType === "placement") {
       setJobFair(false);
       setWebinar(false);
       setInternship(true);
@@ -60,7 +63,7 @@ export default function NewPost() {
       setWebinar(false);
       setInternship(false);
     }
-  };
+  }, [handleChange])
 
   const now = new Date();
   const [title, setTitle] = React.useState("");
@@ -116,6 +119,7 @@ export default function NewPost() {
         setSalary("");
         setCompany("");
         setPlace("");
+        setSingleFile("")
       })
       .catch((err) => {
         toast.error(err.message, {
@@ -221,21 +225,19 @@ export default function NewPost() {
             {jobFair ? (
               <>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DesktopDatePicker
-                    label="Date"
-                    inputFormat="DD/MM/YYYY"
-                    value={time}
+                  <TimePicker
+                    label="Time"
                     onChange={handleTime}
+                    value={time}
                     renderInput={(params) => (
                       <TextField
-                        {...params}
-                        name="date"
                         size="small"
-                        sx={{ minWidth: "100%", margin: ".5rem 0" }}
+                        sx={{ fontSize: "12px", mt: 1 }}
+                        {...params}
                         fullWidth
+                        
                       />
                     )}
-                    size="small"
                   />
                 </LocalizationProvider>
 

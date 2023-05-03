@@ -46,13 +46,15 @@ export default function Posts() {
                       flexDirection: "column",
                     }}
                   >
+
                     <CardMedia
                       sx={{
                         height: "10rem",
                       }}
                       component="img"
-                      image="https://source.unsplash.com/random"
-                      alt="random"
+                      // image={`http://localhost:5000/${item.imageName.filePath}`}
+                      image={`http://localhost:5000/${item.imageName.filePath}`}
+                      alt={item.imageName.fileName}
                     />
                     <CardContent sx={{ flexGrow: 1 }}>
                       <Typography gutterBottom variant="h5" component="h2">

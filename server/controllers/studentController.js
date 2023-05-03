@@ -41,19 +41,37 @@ module.exports = {
   },
 
   getAllPost: async (req, res) => {
-    const today = new Date();
-    const query = {
-      status: true,
-      date: { $lte: today }
-    }
-    const posts = await postSchema.find(query);
-
     try {
+      const today = new Date();
+      const query = {
+        date: { $gt: today }
+      };
+      const posts = await postSchema.find(query);
+  
       if (!posts) {
-        res.status(400).json({ message: "No posts" });
+        return res.status(400).json({ message: "No posts" });
       }
-      res.status(200).json({ message: "Success", posts });
+  
+      // Map through the posts and append image details
+      const postsWithImages = await Promise.all(
+        posts.map(async (post) => {
+          const image = {
+            fileName: post.imageName[0].fileName,
+            filePath: post.imageName[0].filePath,
+            fileType: post.imageName[0].fileType,
+            fileSize: post.imageName[0].fileSize,
+          };
+  
+          return {
+            ...post._doc,
+            imageName: image,
+          };
+        })
+      );
+  
+      res.status(200).json({ message: "Success", posts: postsWithImages });
     } catch (err) {
+      console.error(err);
       res.status(500).json({ message: "Server Error" });
     }
   },

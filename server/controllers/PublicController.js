@@ -10,14 +10,14 @@ module.exports = {
   scheduleClass: async (req, res, next) => {
     const { title, date, time, meetLink, userID } = req.body;
     console.log(req.file);
-    
+
     try {
-      const file = new SingleFile({
+      const file = {
         fileName: req.file.originalname,
         filePath: req.file.path,
         fileType: req.file.mimetype,
         fileSize: fileSizeFormatter(req.file.size, 2) // 0.00
-      });
+      };
 
       const scheduleData = await ScheduleSchema.create({
         ownerID: userID,
@@ -142,12 +142,16 @@ module.exports = {
       salary,
     } = req.body;
 
-    const file = new SingleFile({
+    console.log("post image file" + JSON.stringify(req.file))
+
+    const file = {
       fileName: req.file.originalname,
       filePath: req.file.path,
       fileType: req.file.mimetype,
       fileSize: fileSizeFormatter(req.file.size, 2) // 0.00
-    })
+    };
+
+
     try {
       const post = await PostSchema.create({
         ownerID: userID,
@@ -159,7 +163,7 @@ module.exports = {
         company,
         place,
         salary,
-        imgName: file,
+        imageName: [file], // push file object to array
         status: false,
       });
 
@@ -172,6 +176,7 @@ module.exports = {
       console.log(err);
     }
   },
+
 
   getAllPost: async (req, res) => {
     const { _id } = req.params.id;

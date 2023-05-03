@@ -149,6 +149,7 @@ function ChatContainer({ selectUser }) {
                 sx={{ width: "100%", p: 1 }}
                 justifyContent="flex-end"
                 alignItems="center"
+         
 
               >
                 <Box
@@ -157,6 +158,9 @@ function ChatContainer({ selectUser }) {
                     minWidth: "50%",
                     p: 1,
                     borderRadius: "0.4rem",
+                    maxWidth: "60%",
+                    overflow: 'hidden',
+                    height: 'auto'
                   }}
                 >
                   {msg?.message}
@@ -175,6 +179,11 @@ function ChatContainer({ selectUser }) {
                     minWidth: "50%",
                     p: 1,
                     borderRadius: "0.4rem",
+                    maxWidth: "60%",
+                    overflow: 'hidden',
+                    height: 'auto'
+                  
+
                   }}
                 >
                   {msg?.message}
