@@ -32,10 +32,10 @@ function ChatContainer({ selectUser }) {
 
   const getMessage = async () => {
     await axios
-      .get(`http://localhost:5000/chat/getMessages/${userId}/${selectUser?.userid}`)
+      .get(`http://localhost:5000/chat/getMessages/${userId}/${selectUser?._id}`)
       .then((res) => {
         console.log(res);
-        console.log("from=" + userId, "and to=" + selectUser?.userId);
+        console.log("from=" + userId, "and to=" + selectUser?._id);
         setAllMessages(res.data.allMessage);
       })
       .catch((err) => {
@@ -45,15 +45,15 @@ function ChatContainer({ selectUser }) {
 
   useEffect(() => {
     getMessage();
-    console.log("from=" + userId, "and to=" + selectUser?.userid);
+    console.log("from=" + userId, "and to=" + selectUser?._id);
     console.log("data=" + selectUser);
-  }, [selectUser?.userid]);
+  }, [selectUser?._id]);
 
   // sending message
   const SendMessage = () => {
     const chatInfo = {
       from: userId,
-      to: selectUser?.userid,
+      to: selectUser?._id,
       message
     }
 
@@ -63,7 +63,7 @@ function ChatContainer({ selectUser }) {
     }
     // before posting message
     socket.current.emit("send-msg", {
-      to: selectUser?.userid,
+      to: selectUser?._id,
       from: userId,
       message
     })
@@ -149,7 +149,7 @@ function ChatContainer({ selectUser }) {
                 sx={{ width: "100%", p: 1 }}
                 justifyContent="flex-end"
                 alignItems="center"
-         
+
 
               >
                 <Box
@@ -182,7 +182,7 @@ function ChatContainer({ selectUser }) {
                     maxWidth: "60%",
                     overflow: 'hidden',
                     height: 'auto'
-                  
+
 
                   }}
                 >

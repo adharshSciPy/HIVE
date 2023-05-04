@@ -44,8 +44,9 @@ module.exports = {
     try {
       const today = new Date();
       const query = {
-        date: { $gt: today }
-      };
+        status: true,
+        date: { $lte: today }
+      }
       const posts = await postSchema.find(query);
   
       if (!posts) {

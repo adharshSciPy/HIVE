@@ -1,13 +1,26 @@
 const MessageSchema = require("../models/messageSchema");
+const UserSchema = require("../models/userSchema")
 
 module.exports = {
+  getChatUser: async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const userToIgnore = await UserSchema.findById(userId);
+      const users = await UserSchema.find({ _id: { $ne: userToIgnore._id } });
+      res.status(200).json({ message: "Chat users found", users });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  },
+
   postMessage: async (req, res) => {
     const { from, to, message } = req.body;
 
     try {
       const newMessage = await MessageSchema.create({
         message: message,
-        chatUsers: [from, to],    
+        chatUsers: [from, to],
         sender: from,
       });
 

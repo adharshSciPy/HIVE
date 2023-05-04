@@ -140,7 +140,7 @@ function DrawerAppBar(props) {
       }}
     >
       <Typography variant="h6" color="primary" sx={{ my: 2, fontWeight: 700 }}>
-        HIVE
+        Hive
       </Typography>
       <Divider />
 
@@ -240,10 +240,12 @@ function DrawerAppBar(props) {
           >
             HIVE
           </Typography>
-          {/* 
-          <Typography variant="subtitle1 " color="white" sx={{mr: 7}}>
-            welcome {userName}
-          </Typography> */}
+          {
+            isAuthenticated && <Typography variant="subtitle1 " color="white" sx={{ mr: '20rem' }}>
+              Welcome, {userName}
+            </Typography>
+          }
+
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {/* navbar for students */}
             {role === "student" &&

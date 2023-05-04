@@ -22,18 +22,21 @@ import React from "react";
 import ChatContainer from "../chat container/ChatContainer";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 
 function Contact() {
   const [users, setUsers] = useState([]);
   const [selectUser, setSelectUser] = useState();
   const [color, setColor] = useState(true)
+  const userId = useSelector((state) => state.auth.user);
 
   const fetchAllUsers = () => {
     axios
-      .get("http://localhost:5000/user/getAllUsers")
+      .get(`http://localhost:5000/chat/getChatUsers/${userId}`)
       .then((res) => {
-        setUsers(res.data.sortedUser);
+        setUsers(res.data.users);
+        console.log(res)
       })
       .catch((err) => {
         console.log(err);
@@ -78,9 +81,9 @@ function Contact() {
 
           {/* contact list */}
           <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-            {users.map((item, val) => {
+            {users?.map((item, val) => {
               return (
-                <ListItemButton key={val} onClick={() => handleClick(item)} sx={{backgroundColor: selectUser?.userid === item.userid ? '#F6F8FA' : ''}}>
+                <ListItemButton key={val} onClick={() => handleClick(item)} sx={{ backgroundColor: selectUser?.userid === item.userid ? '#F6F8FA' : '' }}>
                   <ListItem sx={{ maxHeight: "3rem" }}>
                     <ListItemAvatar>
                       <Avatar
@@ -102,7 +105,7 @@ function Contact() {
 
       <Grid item xs={6} md={8} sx={{ alignItems: 'center', justifyContent: 'center' }}>
         {
-          selectUser?.userid !== undefined ? <ChatContainer selectUser={selectUser} /> :
+          selectUser?._id !== undefined ? <ChatContainer selectUser={selectUser} /> :
             <Box sx={{ height: '85%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
               <img src="https://media.istockphoto.com/id/587805156/vector/profile-picture-vector-illustration.jpg?s=612x612&w=0&k=20&c=gkvLDCgsHH-8HeQe7JsjhlOY6vRBJk_sKW9lyaLgmLo=" alt="" width="250px" height='250px' />
               <Typography variant="h5" color="primary" sx={{ fontWeight: '600' }}>Select an user to chat</Typography>
