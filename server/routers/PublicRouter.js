@@ -13,6 +13,7 @@ router.delete("/deleteClass/:id", publicController.deleteClass);
 router.put("/updateStatus/:id", publicController.updateStatus);
 router.get('/getAllPosts/:id', publicController.getAllPost);
 router.delete('/deletePost/:id', publicController.deletePost);
+router.post('/uploadCertificate', upload.single('file'), publicController.uploadCertificate)
 
 
 module.exports = router;

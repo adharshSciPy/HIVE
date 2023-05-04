@@ -1,6 +1,7 @@
 const ScheduleSchema = require("../models/scheduleSchema");
 const PostSchema = require("../models/postSchema");
-const SingleFile = require("../models/multiplefile")
+const userSchema = require("../models/userSchema");
+const certificate = require("../models/certificate")
 const jwt = require("jsonwebtoken");
 const fileSizeFormatter = require('./fileformat')
 
@@ -209,4 +210,34 @@ module.exports = {
       res.status(500).json({ message: "Server Error" });
     }
   },
+
+  uploadCertificate: async (req, res) => {
+    const { studentId } = req.body
+    const file = {
+      fileName: req.file.originalname,
+      filePath: req.file.path,
+      fileType: req.file.mimetype,
+      fileSize: fileSizeFormatter(req.file.size, 2) // 0.00
+    };
+
+    try {
+      const addCertificate = await certificate.create(
+        {
+          studentId: studentId,
+          certificate: file
+        }
+      )
+
+      if (!addCertificate) {
+        res.status(400).json({ message: "Certificate adding failed" });
+      }
+      else {
+        res.status(200).json({ message: "Certificate added Succesfully" });
+      }
+    }
+    catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Server Error" });
+    }
+  }
 };

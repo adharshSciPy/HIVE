@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
-
 const UserSchema = new Schema({
     fullName: {
         type: String,
@@ -39,7 +38,8 @@ const UserSchema = new Schema({
     course: {
         type: String
     },
-    createdAt : { type: Date, default: Date.now }
+    certficate: [Object],
+    createdAt: { type: Date, default: Date.now }
 })
 
 
