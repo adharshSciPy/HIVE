@@ -36,7 +36,7 @@ export default function Posts() {
         <Container sx={{ py: 8 }} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {cards.map((item, val) => {
+            {cards?.map((item, val) => {
               return (
                 <Grid item key={val} xs={12} sm={6} md={4}>
                   <Card
@@ -69,11 +69,17 @@ export default function Posts() {
                 </Grid>
               );
             })}
+            {
+              cards.length === 0 && (
+                <Box sx={{ height: '60vh', width: '95vw', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >There are no new posts available for you to view</Box>
+              )
+            }
           </Grid>
         </Container>
       </main>
       {/* Footer */}
-      <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
+      {/* <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
         <Typography variant="h6" align="center" gutterBottom>
           Footer
         </Typography>
@@ -85,7 +91,7 @@ export default function Posts() {
         >
           Something here to give the footer a purpose!
         </Typography>
-      </Box>
+      </Box> */}
     </>
   );
 }

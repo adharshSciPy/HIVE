@@ -18,7 +18,7 @@ export default function ControlledAccordions() {
   const [selectedPublic, setSelectedPublic] = React.useState("");
 
   // handeling accordion
-  const [expanded, setExpanded] = React.useState(1);  
+  const [expanded, setExpanded] = React.useState(1);
   const [accordionData, setAccordionData] = React.useState([]);
 
   React.useEffect(() => {
@@ -140,8 +140,6 @@ export default function ControlledAccordions() {
           );
         })}
       </Box>
-
-      <Box>hello</Box>
     </Container>
   );
 }

@@ -1,6 +1,7 @@
 const UserSchema = require("../models/userSchema");
 const ScheduleSchema = require("../models/scheduleSchema");
 const postSchema = require("../models/postSchema");
+const certificiateSchema = require("../models/certificate");
 const mongoose = require("mongoose");
 
 module.exports = {
@@ -48,11 +49,11 @@ module.exports = {
         date: { $lte: today }
       }
       const posts = await postSchema.find(query);
-  
+
       if (!posts) {
         return res.status(400).json({ message: "No posts" });
       }
-  
+
       // Map through the posts and append image details
       const postsWithImages = await Promise.all(
         posts.map(async (post) => {
@@ -62,15 +63,49 @@ module.exports = {
             fileType: post.imageName[0].fileType,
             fileSize: post.imageName[0].fileSize,
           };
-  
+
           return {
             ...post._doc,
             imageName: image,
           };
         })
       );
-  
+
       res.status(200).json({ message: "Success", posts: postsWithImages });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Server Error" });
+    }
+  },
+
+  getAllCertificates: async (req, res) => {
+    const { userId } = req.params
+    try {
+
+      const certificates = await certificiateSchema.find({ studentId: userId })
+
+      if (!certificates) {
+        return res.status(400).json({ message: "No Certificates" });
+      }
+
+      // Map through the posts and append image details
+      const myCertificates = await Promise.all(
+        certificates.map(async (certificate) => {
+          const cert = {
+            fileName: certificate.certificate[0].fileName,
+            filePath: certificate.certificate[0].filePath,
+            fileType: certificate.certificate[0].fileType,
+            fileSize: certificate.certificate[0].fileSize,
+          };
+
+          return {
+            ...certificate._doc,
+            certificate: cert,
+          };
+        })
+      );
+
+      res.status(200).json({ message: "Success", certificates: myCertificates });
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Server Error" });

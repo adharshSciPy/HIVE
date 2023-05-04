@@ -61,6 +61,10 @@ function DrawerAppBar(props) {
       link: "/student/post",
     },
     {
+      title: "Certificates",
+      link: "/student/certificate",
+    },
+    {
       title: 'Chat',
       link: '/chat'
     }
