@@ -18,60 +18,53 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux'
 
+
 function Home() {
 
-  const theme = createTheme();
   const navigate = useNavigate()
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const role = useSelector((state)=> state.auth.role);
+  const role = useSelector((state) => state.auth.role);
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <main>
-        {/* Hero unit */}
-        <Box
-          sx={{
-            bgcolor: 'background.paper',
-            pt: 8,
-            pb: 6,
-          }}
-        >
-          <Container maxWidth="sm">
-            <Typography
-              component="h1"
-              variant="h2"
-              align="center"
-              color="text.primary"
-              gutterBottom
-            >
-              HIVE
+
+    <Container maxWidth="lg" sx={{ minHeight: '90vh', maxWidth: '95vw' }}>
+      <Grid container alignItems="center" justifyContent="space-between" sx={{ width: '100%' }}>
+        <Grid item md={6} xs={12}>
+          <Box sx={{ height: '80vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <Typography variant="h4" color="initial">
+              Join the Buzz of
             </Typography>
-            {
-              
-            }
-            <Typography variant="h5" align="center" color="text.secondary" paragraph>
-              We believe that every student has the potential to succeed and achieve their goals, and our program is designed to help them do just that. Our team of dedicated educators and mentors work with students to provide the support and resources they need to thrive in school and beyond. We are committed to empowering the next generation of leaders.
+            <Typography variant="h2" color="initial">
+              Online Learning
             </Typography>
-            <Stack
-              sx={{ pt: 4 }}
-              direction="row"
-              spacing={2}
-              justifyContent="center"
-            >
-              {
-                !isAuthenticated && 
-                (
-                  <>
-                  <Button variant="contained" onClick={()=>{navigate('/login')}}>Login</Button>
-                  <Button variant="outlined" onClick={()=> {navigate('/register')}}>Register</Button>
-                  </>
-                )
-              }
+            <Typography variant="h3" color="primary">
+              with HIVE
+            </Typography>
+            <Typography variant="h6" color="initial" sx={{ mt: '1rem' }}>
+              The Ultimate Social Media Platform for Students!
+            </Typography>
+            <Stack direction="row" spacing={2} sx={{ mt: '1rem' }}>
+              <Button variant="outlined" onClick={() => navigate('/login')}>
+                Login
+              </Button>
+
+              <Button variant="contained" onClick={() => navigate('/register')}>
+                Register
+              </Button>
             </Stack>
-          </Container>
-        </Box>
-      </main>
-    </ThemeProvider>
+          </Box>
+        </Grid>
+
+
+        <Grid item xs={12} md={6}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
+            <img src="https://img.freepik.com/free-vector/digital-presentation-concept-illustration_114360-8175.jpg?w=740&t=st=1683180787~exp=1683181387~hmac=170ff7026808d7ec10b9b8b83219c1619ef43498c263baf74e1d9d1c4e924e82" alt="" style={{ width: '60%', height: '60%' }} />
+          </div>
+        </Grid>
+      </Grid>
+    </Container>
+
+
+
   )
 }
 

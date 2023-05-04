@@ -1,7 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 
 const Colors = {
-    primary: '#7f18c8',
+    primary: '#734f96',
     // primary: '#1976D2',
     secondary: '#6F7E8C',
     textGrey: '#6F7E8C',
