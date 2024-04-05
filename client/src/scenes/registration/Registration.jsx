@@ -3,7 +3,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router-dom'
@@ -14,12 +14,16 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { InputLabel, MenuItem } from '@mui/material';
+import { InputLabel, MenuItem, FormControl, FormLabel, FormHelperText } from '@mui/material';
 import { useState } from 'react';
 import { setRole } from '../../store/auth';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import dayjs from 'dayjs';
 import axios from 'axios'
 import { toast } from 'react-toastify';
@@ -33,6 +37,7 @@ export default function SignUp() {
   const [student, setStudent] = useState(false)
   const [role, setRole] = useState('')
   const [date, setDate] = React.useState('');
+  const [showPassword, setShowPassword] = useState(false)
 
   const navigate = useNavigate()
 
@@ -55,6 +60,7 @@ export default function SignUp() {
     fullName: '',
     role: '',
     email: '',
+    institutionName: '',
     password: '',
     confirmPassword: '',
     gender: '',
@@ -97,6 +103,12 @@ export default function SignUp() {
       errors.password = 'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number';
     }
 
+    // insitution name required
+    if (!student) {
+      if (!data.institutionName) {
+        errors.institutionName = 'Institution Name is required';
+      }
+    }
 
     // Confirm Password validation
     if (!data.confirmPassword) {
@@ -112,15 +124,6 @@ export default function SignUp() {
       if (!data.gender) {
         errors.gender = 'Gender is required';
       }
-
-
-      // // dob gender validation
-      // if (!data.dob) {
-      //   errors.dob = 'Date of Birth is required';
-      // }
-      // else {
-      //   errors.dob = ''
-      // }
 
       // college gender validation
       if (!data.college) {
@@ -150,6 +153,7 @@ export default function SignUp() {
         fullName: formData.fullName,
         role,
         email: formData.email,
+        institutionName: formData.institutionName,
         password: formData.password,
         gender: formData.gender,
         dob: formData.dob,
@@ -236,8 +240,28 @@ export default function SignUp() {
                 fullWidth
               />
             </Grid>
+
+            {
+              !student && <>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Institution Name"
+                    name="institutionName"
+                    type="text"
+                    value={formData.institutionName}
+                    onChange={handleInputChange}
+                    error={!!formErrors.institutionName}
+                    helperText={formErrors.institutionName}
+                    required
+                    fullWidth
+                  />
+                </Grid>
+              </>
+            }
+
+
             <Grid item xs={12} sm={6}>
-              <TextField
+              {/* <TextField
                 label="Password"
                 name="password"
                 type="text"
@@ -247,11 +271,36 @@ export default function SignUp() {
                 helperText={formErrors.password}
                 required
                 fullWidth
-              />
+              /> */}
+
+              <FormControl variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-password">Password *</InputLabel>
+                <OutlinedInput
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  type={showPassword ? 'text' : 'password'}
+                  label="Passwords"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  error={!!formErrors.password}
+                  helperText={formErrors.password}
+                  required
+                  fullWidth
+                />
+              </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                label="Confirm Password"
+                label="Confirm Password *"
                 name="confirmPassword"
                 type="text"
                 value={formData.confirmPassword}

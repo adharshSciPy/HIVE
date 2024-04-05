@@ -18,6 +18,11 @@ const UserSchema = new Schema({
         unique: true,
     },
 
+    institutionName: {
+        type: String,
+        required: false,
+    },
+
     password: {
         type: String,
         required: true,
