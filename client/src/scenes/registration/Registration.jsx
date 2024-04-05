@@ -261,18 +261,6 @@ export default function SignUp() {
 
 
             <Grid item xs={12} sm={6}>
-              {/* <TextField
-                label="Password"
-                name="password"
-                type="text"
-                value={formData.password}
-                onChange={handleInputChange}
-                error={!!formErrors.password}
-                helperText={formErrors.password}
-                required
-                fullWidth
-              /> */}
-
               <FormControl variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-password">Password *</InputLabel>
                 <OutlinedInput
