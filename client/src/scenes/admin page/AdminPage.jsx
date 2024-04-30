@@ -5,21 +5,38 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import { CardActionArea } from "@mui/material";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react"
+import axios from "axios";
 
 function AdminPage() {
   const navigate = useNavigate()
+  const [post, setPostCount] = useState('')
+  const [student, setStudentCount] = useState('')
+  const [publicCount, setPublicCount] = useState('')
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/admin/getCount')
+      .then((res) => {
+        setPostCount(res.data.postCount)
+        setStudentCount(res.data.studentCount)
+        setPublicCount(res.data.publicCount)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
   return (
     <Box sx={{ maxWidth: "100%" }}>
       <Container>
-        <Typography variant="h5" color="primary" sx={{fontWeight: 700}}>
+        <Typography variant="h5" color="primary" sx={{ fontWeight: 700 }}>
           Dashboard
         </Typography>
 
         <Grid
           container
           sx={{
-            width: "100%",
+            width: "95vw",
             mt: 3,
             alignItems: "center",
             justifyContent: "center",
@@ -45,7 +62,7 @@ function AdminPage() {
                       Students
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
-                      22
+                      {student}
                     </Typography>
                   </Stack>
                 </CardContent>
@@ -54,7 +71,7 @@ function AdminPage() {
           </Grid>
 
           <Grid item>
-            <Card sx={{ minWidth: 345, maxWidth: 345 }}  onClick={() => navigate('/admin/publicList')}>
+            <Card sx={{ minWidth: 345, maxWidth: 345 }} onClick={() => navigate('/admin/publicList')}>
               <CardActionArea>
                 <CardMedia
                   component="img"
@@ -72,7 +89,7 @@ function AdminPage() {
                       Public
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
-                      44
+                      {publicCount}
                     </Typography>
                   </Stack>
                 </CardContent>
@@ -81,7 +98,7 @@ function AdminPage() {
           </Grid>
 
           <Grid item>
-            <Card sx={{ minWidth: 345, maxWidth: 345 }}  onClick={() => navigate('/admin/adminPosts')}> 
+            <Card sx={{ minWidth: 345, maxWidth: 345 }} onClick={() => navigate('/admin/adminPosts')}>
               <CardActionArea>
                 <CardMedia
                   component="img"
@@ -99,7 +116,7 @@ function AdminPage() {
                       Posts
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
-                      100
+                      {post}
                     </Typography>
                   </Stack>
                 </CardContent>

@@ -18,11 +18,6 @@ const UserSchema = new Schema({
         unique: true,
     },
 
-    institutionName: {
-        type: String,
-        required: false,
-    },
-
     password: {
         type: String,
         required: true,
@@ -44,6 +39,7 @@ const UserSchema = new Schema({
         type: String
     },
     certficate: [Object],
+      imageName : String,
     createdAt: { type: Date, default: Date.now }
 })
 

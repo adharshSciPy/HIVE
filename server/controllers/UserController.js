@@ -3,8 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 module.exports = {
-  register: async (req, res, next) => {
-    const { fullName, role, email, password, gender, dob, college, course } =
+  register: async (req, res) => {
+    const { fullName, role, email, password, institutionName, gender, dob, college, course } =
       req.body;
 
     try {
@@ -21,20 +21,19 @@ module.exports = {
         fullName,
         role,
         email,
+        institutionName,
         password: hashedPassword,
         gender,
         dob,
         college,
         course,
-        imageName: req.file ? req.file.filename : null, // push file object to array
       });
-      return res.status(200).json({ message: "User Registered" });
-      next();
+      return res.status(200).json({ message: "Account Created" });
     } catch (err) {
+      console.log(`Server Error ${err}`);
       return res.status(500).json({ message: "Server Error" });
     }
   },
-
   login: async (req, res) => {
     const { email, password } = req.body;
 

@@ -1,46 +1,34 @@
 const ScheduleSchema = require("../models/scheduleSchema");
 const PostSchema = require("../models/postSchema");
 const userSchema = require("../models/userSchema");
-const certificate = require("../models/certificate")
+const certificate = require("../models/certificate");
 const jwt = require("jsonwebtoken");
-const fileSizeFormatter = require('./fileformat')
-
-
+const fs = require("fs");
+const path = require("path");
 
 module.exports = {
-  scheduleClass: async (req, res, next) => {
+  scheduleClass: async (req, res) => {
     const { title, date, time, meetLink, userID } = req.body;
-    console.log(req.file);
 
     try {
-      const file = {
-        fileName: req.file.originalname,
-        filePath: req.file.path,
-        fileType: req.file.mimetype,
-        fileSize: fileSizeFormatter(req.file.size, 2) // 0.00
-      };
-
       const scheduleData = await ScheduleSchema.create({
         ownerID: userID,
         title,
         time,
         date,
         meetLink,
-        pdfName: file,
+        pdfName: req.file ? req.file.filename : null,
         status: true,
       });
       if (!scheduleData) {
         res.status(400).json({ message: "Posting Failed" });
       }
-      console.log(scheduleData);
       res.status(200).json({ message: "Posted Succesfully" });
     } catch (err) {
-      console.log(err);
       res.status(500).json({ message: "Server Error" });
     }
   },
 
-  // api to get the scheduled class details in student
   getScheduledClass: async (req, res) => {
     const { _id } = req.params.id;
     const ScheduledClass = await ScheduleSchema.find({
@@ -75,7 +63,6 @@ module.exports = {
     }
   },
 
-  // delete api
   deleteClass: async (req, res) => {
     const { _id } = req.params.id;
     const deleteApi = await ScheduleSchema.deleteOne({
@@ -88,29 +75,38 @@ module.exports = {
       }
       res.status(200).json({ message: "Succesfully Deleted" });
     } catch (err) {
-      console.log(err);
       res.status(500).json({ message: "Server Error" });
     }
   },
 
-  // api to download pdf
   downloadPdf: async (req, res) => {
-    const { fileName } = req.body;
-    const pdf = `/server/uploads/${fileName}`;
-    const file = `${__dirname}/${pdf}`;
-
     try {
-      if (!file) {
-        res.status(400).json({ message: "Pdf Note Found" });
+      const cert = await certificate.findById(req.params.id);
+      if (!cert) {
+        return res.status(404).send("Certificate not found");
       }
-      res.status(200).json({ message: "Pdf Founded" });
-      res.download(file); // Set disposition and send it.
+      const filePath = path.join(__dirname, "../uploads/", cert.certificate);
+      res.download(filePath, cert.title + ".pdf");
     } catch (err) {
-      res.status(400).json({ message: "Server Error" });
+      console.error(err);
+      res.status(500).send("Server error");
     }
   },
 
-  // api to update status of schedule class to history class
+  viewClassPdf: async (req, res) => {
+    try {
+      const course = await ScheduleSchema.findById(req.params.id);
+      if (!course) {
+        return res.status(404).send("course notes not found");
+      }
+      const filePath = path.join(__dirname, "../uploads/", course.pdfName);
+      res.download(filePath, course.title + ".pdf");
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Server error");
+    }
+  },
+
   updateStatus: async (req, res) => {
     const { _id } = req.params.id;
     const { status } = req.body;
@@ -143,16 +139,6 @@ module.exports = {
       salary,
     } = req.body;
 
-    console.log("post image file" + JSON.stringify(req.file))
-
-    const file = {
-      fileName: req.file.originalname,
-      filePath: req.file.path,
-      fileType: req.file.mimetype,
-      fileSize: fileSizeFormatter(req.file.size, 2) // 0.00
-    };
-
-
     try {
       const post = await PostSchema.create({
         ownerID: userID,
@@ -164,7 +150,7 @@ module.exports = {
         company,
         place,
         salary,
-        imageName: [file], // push file object to array
+        imageName: req.file ? req.file.filename : null, // push file object to array
         status: false,
       });
 
@@ -174,10 +160,8 @@ module.exports = {
       res.status(200).json({ message: "Posted Succesfully" });
     } catch (err) {
       res.status(500).json({ message: "Server Error" });
-      console.log(err);
     }
   },
-
 
   getAllPost: async (req, res) => {
     const { _id } = req.params.id;
@@ -190,7 +174,6 @@ module.exports = {
       res.status(200).json({ message: "Post Found", posts });
     } catch (err) {
       res.status(500).json({ message: "Server Error" });
-      console.log(err);
     }
   },
 
@@ -206,7 +189,6 @@ module.exports = {
       }
       res.status(200).json({ message: "Post Deleted" });
     } catch (err) {
-      console.log(err);
       res.status(500).json({ message: "Server Error" });
     }
   },

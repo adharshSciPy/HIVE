@@ -17,6 +17,7 @@ import AdminStudents from "../scenes/admin page/AdminStudent";
 import AdminPosts from "../scenes/admin page/AdminPosts";
 import Chat from "../scenes/chat/Chat"
 import Certificate from "../scenes/student page/Cerificate";
+import AppliedPost from "../scenes/student page/AppliedPost";
 
 
 export const router = createBrowserRouter([
@@ -113,6 +114,15 @@ export const router = createBrowserRouter([
           },
 
           {
+            path: "/student/post/AppliedPost",
+            element: (
+              <CheckAuth>
+                <AppliedPost />
+              </CheckAuth>
+            ),
+          },
+
+          {
             path: "/student/certificate",
             element: (
               <CheckAuth>
@@ -138,7 +148,7 @@ export const router = createBrowserRouter([
             index: true,
             element: (
               <CheckAuth>
-                <ClassShedule />
+                <PublicPage />
               </CheckAuth>
             ),
           },

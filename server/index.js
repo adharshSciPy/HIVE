@@ -11,6 +11,7 @@ const studentRouter = require('./routers/studentRouter.js')
 const chatRoute = require('./routers/chatRoute.js')
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const path = require('path');
 
 // mongoose connection
 connect();
@@ -19,9 +20,8 @@ connect();
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
-app.get("/", (req, res) => {
-  console.log("backend ready");
-});
+// app.use('/public', express.static(__dirname + '/uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use("/user", userRouter);
 app.use("/public", publicRouter);

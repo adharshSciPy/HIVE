@@ -7,7 +7,10 @@ export const authSlice = createSlice({
     isAuthenticated: false,
     role: '',
     user: null,
-    userName: 'ss'
+    userName: 'ss',
+    silver: false,
+    gold: false,
+    daimond: false
   },
   reducers: {
     setUser: (state, action) => {
@@ -20,15 +23,40 @@ export const authSlice = createSlice({
     },
 
     setAdmin: (state) => {
-      state.role = 'admin'      
+      state.role = 'admin'
     },
 
     setPublic: (state) => {
       state.role = 'public'
     },
-    
-    setUserName : (state, action) => {
+
+    setUserName: (state, action) => {
       state.userName = action.payload
+
+    },
+
+    setSilver: (state) => {
+      state.silver = true
+    },
+
+    setGold: (state) => {
+      state.gold = true
+    },
+
+    setDaimond: (state) => {
+      state.daimond = true
+    },
+
+    unSetSilver: (state) => {
+      state.silver = false
+    },
+
+    unSetGold: (state) => {
+      state.gold = false
+    },
+
+    unSetDaimond: (state) => {
+      state.daimond = false
     },
 
     logout: (state) => {
@@ -36,9 +64,12 @@ export const authSlice = createSlice({
       state.role = ''
       state.isAuthenticated = false;
       state.userName = ''
+      state.silver = false
+      state.gold = false
+      state.daimond = false
     }
   },
 });
 
-export const { setUser, logout, setRole, setStudent, setAdmin, setPublic, setUserName } = authSlice.actions;
+export const { setUser, logout, setRole, setStudent, setAdmin, setPublic, setUserName, setSilver, setGold, setDaimond, unSetSilver, unSetGold, unSetDaimond } = authSlice.actions;
 export default authSlice.reducer;

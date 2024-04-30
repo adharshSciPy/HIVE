@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import {
@@ -20,23 +20,21 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { setUser } from "../../store/auth";
+import { TimePicker } from "@mui/x-date-pickers";
 
 function ClassShedule() {
   // const Token = Cookies.get('token');
 
   const [title, setTitle] = React.useState("");
-  const [time, setTime] = React.useState("");
+  // const [time, setTime] = React.useState("");
   const [meetLink, setMeetLink] = React.useState("");
-  const [singleFile, setSingleFile] = useState('');
-  const [value, setValue] = React.useState(dayjs("03-02-2023"));
+  const [singleFile, setSingleFile] = useState([]);
+  const today = new Date();
+  const [time, setTime] = React.useState(today.toLocaleDateString());
+  const [value, setValue] = React.useState(dayjs(today));
+  const userID = useSelector((state) => state.auth.user);
 
-  const userID = useSelector(state => state.auth.user);
-
-//image upload frontend progressing 
-
-
-
-
+  //image upload frontend progressing
 
   const handleDate = (newValue) => {
     setValue(newValue);
@@ -46,21 +44,25 @@ function ClassShedule() {
   // };
   const SingleFileChange = (e) => {
     setSingleFile(e.target.files[0]);
-    
-}
+  };
+
+  const handleTime = (newValue) => {
+    setTime(newValue);
+  };
+
   const HandleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData();
-    data.append('file', singleFile);
-    data.append('userID', userID)
-    data.append('title', title)
-    data.append('time',  time)
-    data.append('meetLink', meetLink)
-    data.append('date', value)
-  console.log(data);
-  
+    data.append("file", singleFile);
+    data.append("userID", userID);
+    data.append("title", title);
+    data.append("time", time);
+    data.append("meetLink", meetLink);
+    data.append("date", value);
+    console.log(data);
+
     axios
-      .post("http://localhost:5000/public/scheduleClass",data)
+      .post("http://localhost:5000/public/scheduleClass", data)
       .then((res) => {
         toast.success(res.data.message, {
           position: toast.POSITION.TOP_CENTER,
@@ -69,14 +71,14 @@ function ClassShedule() {
           setTime("");
           setTitle("");
           setMeetLink("");
-          setSingleFile('')
+          setSingleFile("");
+          setValue(today);
         }, 400);
       })
       .catch((err) => {
         console.error(err);
       });
   };
-  
 
   return (
     <>
@@ -95,6 +97,7 @@ function ClassShedule() {
             minHeight: 450,
             p: 1,
             backgroundColor: "#E7EBF0",
+            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
           }}
         >
           <CardContent>
@@ -120,7 +123,8 @@ function ClassShedule() {
                       />
                     )}
                     size="small"
-                  />  
+                    minDate={new Date()}
+                  />
                 </LocalizationProvider>
 
                 <TextField
@@ -151,19 +155,21 @@ function ClassShedule() {
                   sx={{ minWidth: "100%", margin: ".5rem 0" }}
                 />
 
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="time"
-                  label="Time"
-                  name="time"
-                  autoFocus
-                  size="small"
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                  sx={{ minWidth: "100%", margin: ".5rem 0" }}
-                />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <TimePicker
+                    label="Time"
+                    onChange={handleTime}
+                    value={time}
+                    renderInput={(params) => (
+                      <TextField
+                        size="small"
+                        sx={{ fontSize: "12px", mt: 1 }}
+                        {...params}
+                        fullWidth
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
 
                 <Button
                   component="label"
@@ -173,24 +179,13 @@ function ClassShedule() {
                   variant="outlined"
                   sx={{ minWidth: "100%", margin: ".5rem 0" }}
                 >
-                  <input type="file" className="file"  onChange={(e) => SingleFileChange(e)} />
+                  <input
+                    type="file"
+                    className="file"
+                    onChange={(e) => SingleFileChange(e)}
+                    value={singleFile[0]}
+                  />
                 </Button>
-
-                {/* <TextField
-                variant="outlined"
-                select
-                label="Batch"
-                name='batch'
-                sx={{ width: '100%', margin: '1rem 0' }}
-                size='small'
-              >
-                <MenuItem value='a'>A</MenuItem>
-                <MenuItem value='b'>B</MenuItem>
-                <MenuItem value='c'>C</MenuItem>
-                <MenuItem value='d'>D</MenuItem>
-                <MenuItem value='e'>E</MenuItem>
-                <MenuItem value='f'>F</MenuItem>
-              </TextField> */}
 
                 <Button
                   type="submit"
@@ -211,6 +206,7 @@ function ClassShedule() {
             maxHeight: 450,
             p: 1,
             backgroundColor: "#E7EBF0",
+            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
           }}
         >
           <CardContent>

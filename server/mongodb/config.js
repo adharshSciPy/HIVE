@@ -11,7 +11,9 @@ async function connect() {
       console.log("Mongodb Connected");
     })
     .catch((err) => {
-      console.log(err);
+      console.log(
+        "Mongo DB Connection failed please check your network connection or contact your developer"
+      );
     });
 }
 

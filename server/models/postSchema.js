@@ -10,9 +10,10 @@ const PostSchema = new Schema({
     required: true,
   },
 
-  applied: {
-    type: Array
-  },
+  appliedUsers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
 
   title: {
     type: String,
@@ -49,7 +50,7 @@ const PostSchema = new Schema({
     type: Boolean
   },
 
-  imageName : [Object],
+  imageName : String,
 
   createdAt: { type: Date, default: Date.now },
 });

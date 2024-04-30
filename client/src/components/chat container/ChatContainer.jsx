@@ -49,7 +49,7 @@ function ChatContainer({ selectUser }) {
     console.log("data=" + selectUser);
   }, [selectUser?._id]);
 
-  // sending messages
+  // sending message
   const SendMessage = () => {
     const chatInfo = {
       from: userId,

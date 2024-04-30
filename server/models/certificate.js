@@ -8,9 +8,14 @@ const Certificate = new Schema({
         required: true,
     },
 
+    title: {
+        type: String,
+        required: true
+    },
+
     certificate: {
-        type: Array,
-        required: true,
+        type: String,
+        // required: true,
     }
 }, { timestamps: true });
 

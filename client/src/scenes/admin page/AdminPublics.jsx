@@ -85,7 +85,7 @@ function AdminPublics() {
           >
             {/* <ButtonGroup size="small" aria-label="small button group"> */}
             <Button color="error">
-              <HighlightOffRoundedIcon />
+              <HighlightOffRoundedIcon  onClick={onClickDelete}/>
             </Button>
 
             {/* <Button color="success" onClick={onClickUpdate}>

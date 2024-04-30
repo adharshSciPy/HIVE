@@ -89,6 +89,7 @@ function AdminPosts() {
                 position: toast.POSITION.TOP_CENTER,
               });
               setRow();
+              setHistoryRow();
             })
             .catch((err) => {
               console.error(err);

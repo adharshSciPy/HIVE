@@ -104,7 +104,7 @@ export default function SignIn() {
                 break;
 
               case "public":
-                navigate("/public/sheduleCourses");
+                navigate("/public");
                 // dispatch(setUser(true));
                 dispatch(setPublic());
                 break;
