@@ -10,7 +10,8 @@ export const authSlice = createSlice({
     userName: 'ss',
     silver: false,
     gold: false,
-    daimond: false
+    daimond: false,
+    studentDetails: {}
   },
   reducers: {
     setUser: (state, action) => {
@@ -32,7 +33,6 @@ export const authSlice = createSlice({
 
     setUserName: (state, action) => {
       state.userName = action.payload
-
     },
 
     setSilver: (state) => {
@@ -59,6 +59,10 @@ export const authSlice = createSlice({
       state.daimond = false
     },
 
+    saveStudentDetails: (state, action) => {
+      state.studentDetails = action.payload;
+    },
+
     logout: (state) => {
       state.user = null
       state.role = ''
@@ -71,5 +75,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setUser, logout, setRole, setStudent, setAdmin, setPublic, setUserName, setSilver, setGold, setDaimond, unSetSilver, unSetGold, unSetDaimond } = authSlice.actions;
+export const { setUser, logout, setRole, setStudent, setAdmin, setPublic, setUserName, setSilver, setGold, setDaimond, unSetSilver, unSetGold, unSetDaimond, saveStudentDetails } = authSlice.actions;
 export default authSlice.reducer;

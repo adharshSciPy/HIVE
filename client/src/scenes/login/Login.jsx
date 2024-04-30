@@ -21,7 +21,8 @@ import {
   setStudent,
   setPublic,
   setAdmin,
-  setUserName
+  setUserName,
+  saveStudentDetails
 } from "../../store/auth";
 import { MenuItem } from "@mui/material";
 import axios from "axios";
@@ -90,7 +91,15 @@ export default function SignIn() {
           const userData = (user._id)
           const userName = (user.fullName)
 
-          // alert(userData)
+          let studentDetails = {
+            fullName: user?.fullName,
+            email: user?.email,
+            college: user?.college,
+            dob: user?.dob,
+            course: user?.course
+          }
+
+          dispatch(saveStudentDetails(studentDetails))
           dispatch(setUser(userData))
           dispatch(setUserName(userName))
 

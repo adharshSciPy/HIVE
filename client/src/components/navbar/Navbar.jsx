@@ -19,7 +19,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout, setRole, setUser } from "../../store/auth";
 import Cookies from "js-cookie";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Card, CardMedia } from "@mui/material";
+import { Card, CardMedia, Stack, TextField } from "@mui/material";
+import CreateIcon from '@mui/icons-material/Create';
 import { toast } from "react-toastify";
 import axios from "axios"
 
@@ -42,6 +43,7 @@ function DrawerAppBar(props) {
 
   // customised functionalities
   const userName = useSelector((state) => state.auth.userName);
+  const studentDetails = useSelector((state) => state.auth.studentDetails);
   // redux functions importing
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -123,10 +125,22 @@ function DrawerAppBar(props) {
   // get student profile detail
   const userID = useSelector((state) => state.auth.user);
   const [profile, setProfile] = React.useState()
+  const [isEditMode, setIsEditMode] = React.useState(false)
+
+  const [fullName, setFullName] = React.useState(profile?.fullname)
+  const [college, setCollege] = React.useState('')
+  const [course, setCourse] = React.useState('')
+  const [dob, setDob] = React.useState('')
+
   React.useEffect(() => {
     axios.get(`http://localhost:5000/student/getProfile/${userID}`)
       .then((res) => {
+        console.log('res', res)
         setProfile(res.data.profile)
+        setFullName(res.data?.profile?.fullName)
+        setCollege(res.data?.profile?.college)
+        setCourse(res.data?.profile?.course)
+        setDob(res.data?.profile?.dob)
       })
       .catch((err) => {
         console.log(err)
@@ -149,6 +163,17 @@ function DrawerAppBar(props) {
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
+
+  const handleToggleEditProfile = (e) => {
+    e.preventDefault()
+    setMobileOpen(false)
+    setIsEditMode(true)
+  }
+  const handleSaveUpdateDetails = (e) => {
+    e.preventDefault()
+    setMobileOpen(false)
+    setIsEditMode(false)
+  }
 
   const drawer = (
     <Box
@@ -181,16 +206,60 @@ function DrawerAppBar(props) {
             <CardMedia
               component="img"
               sx={{ width: "100%", height: "100%" }}
-              image={profile?.imageName ? `http://localhost:5000${profile?.imageName}` : 'https://img.freepik.com/premium-vector/male-profile-flat-blue-simple-icon-with-long-shadowxa_159242-10092.jpg'}
+              image={profile?.imageName ? `http://localhost:5000/${profile?.imageName}` : 'https://img.freepik.com/premium-vector/male-profile-flat-blue-simple-icon-with-long-shadowxa_159242-10092.jpg'}
               alt={profile?.imageName}
             />
           </Card>
-          <Typography variant="body1" color="primary" sx={{ fontWeight: 500 }}>
-            {userName}
-          </Typography>
-          <Typography variant="caption" sx={{ fontWeight: 500 }}>
-            {profile?.college}
-          </Typography>
+          {
+            !isEditMode ?
+              <>
+                <Typography variant="body1" color="primary" sx={{ fontWeight: 500 }}>
+                  {userName}
+                </Typography>
+                <Typography variant="caption" sx={{ fontWeight: 500 }}>
+                  {profile?.college}
+                </Typography>
+                <Typography variant="caption" sx={{ fontWeight: 500 }}>
+                  {profile?.course}
+                </Typography>
+                <Typography variant="caption" sx={{ fontWeight: 500 }}>
+                  {profile?.dob}
+                </Typography>
+              </>
+
+              :
+
+              <>
+                <Stack gap={1}>
+                  <TextField variant="outlined" placeholder="fullname" size="small" onClick={() => setMobileOpen(false)} value={fullName} onChange={(e) => setFullName(e.target.value)} />
+                  <TextField variant="outlined" placeholder="college" size="small" onClick={() => setMobileOpen(false)} value={profile?.college} onChange={(e) => setCollege(e.target.value)} />
+                  <TextField variant="outlined" placeholder="course" size="small" onClick={() => setMobileOpen(false)} value={profile?.course} onChange={(e) => setCourse(e.target.value)} />
+                  <TextField variant="outlined" placeholder="date of birth" size="small" onClick={() => setMobileOpen(false)} value={profile?.dob} onChange={(e) => setDob(e.target.value)} />
+                  <Button
+                    sx={{ marginBottom: 10 }}
+                    onClick={handleSaveUpdateDetails}
+                    variant="contained"
+                    size="small"
+                  >
+                    Save
+                  </Button>
+                </Stack>
+              </>
+          }
+
+          {
+            !isEditMode &&
+            <Button
+              sx={{ marginBottom: 10 }}
+              startIcon={<CreateIcon />}
+              onClick={handleToggleEditProfile}
+              variant="contained"
+              size="small"
+            >
+              Edit Profile
+            </Button>
+          }
+
 
           <Button
             startIcon={<LogoutIcon />}
