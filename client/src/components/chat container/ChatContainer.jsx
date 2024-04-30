@@ -65,7 +65,6 @@ function ChatContainer({ selectUser }) {
     })
     axios.post('http://localhost:5000/chat/postMessage', chatInfo)
       .then((res) => {
-        console.log(res)
         setAllMessages(allMessages.concat(chatInfo2))
         setMessage('')
       })

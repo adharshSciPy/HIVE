@@ -73,7 +73,6 @@ export default function ControlledAccordions() {
     axios
       .get(`http://localhost:5000/student/getScheduledClassById/${key}`)
       .then((res) => {
-        console.log(res);
         setAccordionData(res.data.scheduledClass);
       })
       .catch((err) => console.log(err));

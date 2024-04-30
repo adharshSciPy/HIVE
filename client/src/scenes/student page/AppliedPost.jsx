@@ -19,7 +19,6 @@ function AppliedPost() {
             .get(`http://localhost:5000/student/getAppliedPosts/${userID}`)
             .then((res) => {
                 setRows(res.data.posts);
-                console.log(res);
                 console.log(res.data.posts);
             })
             .catch((err) => {
@@ -52,7 +51,7 @@ function AppliedPost() {
                         columns={columns}
                         pageSize={5}
                         rowsPerPageOptions={[5]}
-                        getRowId={(row: any) => uuid()}
+                        getRowId={() => uuid()}
                         disableSelectionOnClick
                         disableColumnMenu
                         disableColumnSelector

@@ -20,8 +20,6 @@ export default function DataTable({ handleSubmit }) {
       .get(`http://localhost:5000/public/getAllPosts/${userID}`)
       .then((res) => {
         setRows(res.data.posts);
-        console.log(res);
-        //   console.log(res.data.ScheduledClass);
       })
       .catch((err) => {
         console.error(err);
@@ -45,8 +43,8 @@ export default function DataTable({ handleSubmit }) {
         onClickDelete = (e) => {
           e.stopPropagation(); // don't select this row after clicking
 
-          const api: GridApi = params.api;
-          const thisRow: Record<string, GridCellValue> = {};
+          const api = params.api;
+          const thisRow = {};
 
           api
             .getAllColumns()
@@ -73,38 +71,6 @@ export default function DataTable({ handleSubmit }) {
               });
             });
         };
-
-        // // update status
-        // const onClickUpdate = (e) => {
-        //   e.stopPropagation(); // don't select this row after clicking
-
-        //   const api: GridApi = params.api;
-        //   const thisRow: Record<string, GridCellValue> = {};
-
-        //   api
-        //     .getAllColumns()
-        //     .filter((c) => c.field !== "_check_" && !!c)
-        //     .forEach(
-        //       (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-        //     );
-        //   // alert(JSON.stringify(thisRow))
-        //   console.log(thisRow._id);
-
-        //   axios
-        //     .put(`http://localhost:5000/public/updateStatus/${thisRow._id}`)
-        //     .then((res) => {
-        //       console.log(res.data.message);
-        //       toast.success(res.data.message, {
-        //         position: toast.POSITION.TOP_CENTER,
-        //       });
-        //     })
-        //     .catch((err) => {
-        //       console.error(err);
-        //       toast.error(err.message, {
-        //         position: toast.POSITION.TOP_CENTER,
-        //       });
-        //     });
-        // };
 
         return (
           <Box
@@ -139,7 +105,7 @@ export default function DataTable({ handleSubmit }) {
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}
-        getRowId={(row: any) => uuid()}
+        getRowId={(row) => uuid()}
         disableSelectionOnClick
         disableColumnMenu
         disableColumnSelector
