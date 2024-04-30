@@ -3,8 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 module.exports = {
-  register: async (req, res) => {
-    const { fullName, role, email, password, institutionName, gender, dob, college, course } =
+  register: async (req, res, next) => {
+    const { fullName, role, email, password, gender, dob, college, course } =
       req.body;
 
     try {
@@ -21,21 +21,21 @@ module.exports = {
         fullName,
         role,
         email,
-        institutionName,
         password: hashedPassword,
         gender,
         dob,
         college,
         course,
+        imageName: req.file ? req.file.filename : null, // push file object to array
       });
-      return res.status(200).json({ message: "Account Created" });
+      return res.status(200).json({ message: "User Registered" });
+      next();
     } catch (err) {
-      console.log(`Server Error ${err}`);
       return res.status(500).json({ message: "Server Error" });
     }
   },
 
-  login: async (req, res, next) => {
+  login: async (req, res) => {
     const { email, password } = req.body;
 
     try {
@@ -43,22 +43,27 @@ module.exports = {
       const user = await User.findOne({ email });
       if (!user) {
         res.status(400).json({ message: "User Not Found" });
+      } else {
+        // checking password
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        if (!isPasswordCorrect) {
+          res.status(400).json({ message: "Password is Incorrect" });
+        } else {
+          // generate JWT token
+          const token = jwt.sign(
+            { id: user._id, role: user.role },
+            "IamGreat",
+            {
+              expiresIn: "1h",
+            }
+          );
+          res
+            .status(200)
+            .json({ message: "Logged In Succesfully", user, token });
+        }
       }
-
-      // checking password
-      const isPasswordCorrect = await bcrypt.compare(password, user.password);
-      if (!isPasswordCorrect) {
-        res.status(400).json({ message: "Password is Incorrect" });
-      }
-      // generate JWT token
-      const token = jwt.sign({ id: user._id, role: user.role }, "IamGreat", {
-        expiresIn: "1h",
-      });
-      res.status(200).json({ message: "Logged In Succesfully", user, token });
-      next();
     } catch (err) {
       res.status(500).json({ message: "Server Error" });
-      console.log(`server Error ${err}`);
     }
   },
 
@@ -79,7 +84,6 @@ module.exports = {
       }
     } catch (err) {
       res.status(500).json({ message: "Server Error" });
-      console.log(err);
     }
   },
 
@@ -87,36 +91,19 @@ module.exports = {
   verifyToken: async (req, res) => {
     const { token } = req.body;
     try {
-      if (!token) {
-        return res.status(401).json({ message: 'No token provided' });
+      const verify = jwt.verify(token, "IamGreat");
+      if (!verify) {
+        res.status(400).json({ message: "Verification failed" });
       }
-      jwt.verify(token, "IamGreat", (err, decoded) => {
-        if (err) {
-          console.log('error..', err)
-          if (err.name === 'TokenExpiredError') {
-            return res.status(401).json({ message: 'Token expired' });
-          } else {
-            return res.status(401).json({ message: 'Invalid token' });
-          }
-        }
-        else {
-          if (decoded) {
-            return res.status(200).json({ message: 'Token verification success', data: decoded })
-          }
-        }
-      });
-
+      res.status(200).json({ message: "Verification Success" });
     } catch (err) {
-      console.log('err', err)
-      console.error(err);
-      return res.status(500).json({ message: 'Server Error' });
+      res.status(500).json({ message: "Server Error" });
     }
   },
 
   //   forget password apis
   findAccount: async (req, res, next) => {
     const { email } = req.body;
-    console.log(req.body);
 
     try {
       // findin accout with given email
@@ -135,17 +122,11 @@ module.exports = {
   updatePassword: async (req, res, next) => {
     const { id } = req.params;
     const { newPassword } = req.body;
-    console.log(req.params);
-    console.log(req.body);
 
     try {
       // hasing new password
       const salt = await bcrypt.genSaltSync(10);
-      const newHashedPassword = await bcrypt.hash(
-        newPassword,
-        salt,
-        (err, data) => console.log(err)
-      );
+      const newHashedPassword = await bcrypt.hash(newPassword, salt);
       const updateUserPassword = await User.findByIdAndUpdate(
         id,
         {
@@ -160,7 +141,6 @@ module.exports = {
       next();
     } catch (err) {
       res.status(500).json({ message: "Internal Server Error" });
-      console.log(err);
     }
   },
 
