@@ -19,7 +19,7 @@ function AdminPage() {
         <Grid
           container
           sx={{
-            width: "95vw",
+            width: "100%",
             mt: 3,
             alignItems: "center",
             justifyContent: "center",

@@ -138,7 +138,7 @@ export const router = createBrowserRouter([
             index: true,
             element: (
               <CheckAuth>
-                <PublicPage />
+                <ClassShedule />
               </CheckAuth>
             ),
           },

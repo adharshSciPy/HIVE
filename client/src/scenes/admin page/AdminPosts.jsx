@@ -69,8 +69,8 @@ function AdminPosts() {
         const onClickDelete = (e) => {
           e.stopPropagation(); // don't select this row after clicking
 
-          const api: GridApi = params.api;
-          const thisRow: Record<string, GridCellValue> = {};
+          const api = params.api;
+          const thisRow = {};
 
           api
             .getAllColumns()
@@ -102,8 +102,8 @@ function AdminPosts() {
         const onClickUpdate = (e) => {
           e.stopPropagation(); // don't select this row after clicking
 
-          const api: GridApi = params.api;
-          const thisRow: Record<string, GridCellValue> = {};
+          const api = params.api;
+          const thisRow = {};
 
           api
             .getAllColumns()
@@ -186,7 +186,7 @@ function AdminPosts() {
                   columns={columns}
                   pageSize={5}
                   rowsPerPageOptions={[5]}
-                  getRowId={(row: any) => uuid()}
+                  getRowId={(row) => uuid()}
                   disableSelectionOnClick
                   // disableColumnMenu
                   disableColumnSelector
@@ -211,7 +211,7 @@ function AdminPosts() {
                   columns={columns}
                   pageSize={5}
                   rowsPerPageOptions={[5]}
-                  getRowId={(row: any) => uuid()}
+                  getRowId={(row) => uuid()}
                   disableSelectionOnClick
                   // disableColumnMenu
                   disableColumnSelector
