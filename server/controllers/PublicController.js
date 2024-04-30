@@ -212,32 +212,22 @@ module.exports = {
   },
 
   uploadCertificate: async (req, res) => {
-    const { studentId } = req.body
-    const file = {
-      fileName: req.file.originalname,
-      filePath: req.file.path,
-      fileType: req.file.mimetype,
-      fileSize: fileSizeFormatter(req.file.size, 2) // 0.00
-    };
+    const { studentId, title } = req.body;
 
     try {
-      const addCertificate = await certificate.create(
-        {
-          studentId: studentId,
-          certificate: file
-        }
-      )
+      const addCertificate = await certificate.create({
+        title: title,
+        studentId: studentId,
+        certificate: req.file ? req.file.filename : null,
+      });
 
       if (!addCertificate) {
         res.status(400).json({ message: "Certificate adding failed" });
-      }
-      else {
+      } else {
         res.status(200).json({ message: "Certificate added Succesfully" });
       }
-    }
-    catch (err) {
-      console.log(err);
+    } catch (err) {
       res.status(500).json({ message: "Server Error" });
     }
-  }
+  },
 };
