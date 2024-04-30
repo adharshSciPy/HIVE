@@ -36,7 +36,6 @@ function Contact() {
       .get(`http://localhost:5000/chat/getChatUsers/${userId}`)
       .then((res) => {
         setUsers(res.data.users);
-        console.log(res)
       })
       .catch((err) => {
         console.log(err);
@@ -48,7 +47,6 @@ function Contact() {
   }, []);
 
   const handleClick = (item) => {
-    console.log("clicked" + JSON.stringify(item));
     setSelectUser(item);
   };
 

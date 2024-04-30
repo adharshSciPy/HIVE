@@ -59,7 +59,6 @@ function ClassShedule() {
     data.append("time", time);
     data.append("meetLink", meetLink);
     data.append("date", value);
-    console.log(data);
 
     axios
       .post("http://localhost:5000/public/scheduleClass", data)

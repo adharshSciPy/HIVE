@@ -127,7 +127,6 @@ function DrawerAppBar(props) {
     axios.get(`http://localhost:5000/student/getProfile/${userID}`)
       .then((res) => {
         setProfile(res.data.profile)
-        console.log(profile)
       })
       .catch((err) => {
         console.log(err)

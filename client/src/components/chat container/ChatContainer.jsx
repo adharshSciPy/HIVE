@@ -34,8 +34,6 @@ function ChatContainer({ selectUser }) {
     await axios
       .get(`http://localhost:5000/chat/getMessages/${userId}/${selectUser?._id}`)
       .then((res) => {
-        console.log(res);
-        console.log("from=" + userId, "and to=" + selectUser?._id);
         setAllMessages(res.data.allMessage);
       })
       .catch((err) => {
@@ -45,8 +43,6 @@ function ChatContainer({ selectUser }) {
 
   useEffect(() => {
     getMessage();
-    console.log("from=" + userId, "and to=" + selectUser?._id);
-    console.log("data=" + selectUser);
   }, [selectUser?._id]);
 
   // sending message
@@ -87,7 +83,6 @@ function ChatContainer({ selectUser }) {
     }
   }, [userId])
 
-  console.log(socket)
 
   useEffect(() => {
     if (socket.current) {

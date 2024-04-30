@@ -39,7 +39,6 @@ export default function CertificateUpload() {
   }, []);
 
   const submit = () => {
-    console.log(`STUDENT ${selectedStudent}, FILE ${SingleFile}`);
     const data = new FormData();
     data.append("studentId", selectedStudent);
     data.append("title", title);

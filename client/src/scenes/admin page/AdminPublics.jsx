@@ -18,8 +18,6 @@ function AdminPublics() {
       .get(`http://localhost:5000/admin/getAllPublics`)
       .then((res) => {
         setRows(res.data.publicList);
-        console.log(res);
-        //   console.log(res.data.ScheduledClass);
       })
       .catch((err) => {
         console.error(err);
@@ -43,8 +41,8 @@ function AdminPublics() {
        const onClickDelete = (e) => {
           e.stopPropagation(); // don't select this row after clicking
 
-          const api: GridApi = params.api;
-          const thisRow: Record<string, GridCellValue> = {};
+          const api = params.api;
+          const thisRow= {};
 
           api
             .getAllColumns()
@@ -53,12 +51,10 @@ function AdminPublics() {
               (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
             );
           // alert(JSON.stringify(thisRow))
-          console.log(thisRow._id);
 
           axios
             .delete(`http://localhost:5000/admin/deletePublic/${thisRow._id}`)
             .then((res) => {
-              console.log(res.data.message);
               toast.success(res.data.message, {
                 position: toast.POSITION.TOP_CENTER,
               });
@@ -111,7 +107,7 @@ function AdminPublics() {
             columns={columns}
             pageSize={5}
             rowsPerPageOptions={[5]}
-            getRowId={(row: any) => uuid()}
+            getRowId={(row) => uuid()}
             disableSelectionOnClick
             disableColumnMenu
             disableColumnSelector

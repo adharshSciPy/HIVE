@@ -23,8 +23,6 @@ function AdminPosts() {
       .get(`http://localhost:5000/admin/getAllPosts`)
       .then((res) => {
         setRows(res.data.postLists);
-        console.log(res);
-        //   console.log(res.data.ScheduledClass);
       })
       .catch((err) => {
         console.error(err);
@@ -40,8 +38,6 @@ function AdminPosts() {
       .get(`http://localhost:5000/admin/getPostHistory`)
       .then((res) => {
         setRows2(res.data.postLists);
-        console.log(res);
-        //   console.log(res.data.ScheduledClass);
       })
       .catch((err) => {
         console.error(err);
@@ -78,13 +74,10 @@ function AdminPosts() {
             .forEach(
               (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
             );
-          // alert(JSON.stringify(thisRow))
-          console.log(thisRow._id);
 
           axios
             .delete(`http://localhost:5000/admin/deletePost/${thisRow._id}`)
             .then((res) => {
-              console.log(res.data.message);
               toast.success(res.data.message, {
                 position: toast.POSITION.TOP_CENTER,
               });
@@ -112,8 +105,6 @@ function AdminPosts() {
             .forEach(
               (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
             );
-          // alert(JSON.stringify(thisRow))
-          console.log(thisRow._id);
 
           axios
             .put(`http://localhost:5000/admin/updatePost/${thisRow._id}`)

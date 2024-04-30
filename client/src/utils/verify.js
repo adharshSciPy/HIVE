@@ -12,8 +12,7 @@ function VerifyToken() {
          token
       })
       .then((res) => {
-         console.log(`Verification console${res.data}`)
-         Navigate('/')
+         navigate('/')
       }).catch((err)=> {
          console.log(`Verification Error ${err}`)
          Cookies.remove(Token)
@@ -24,9 +23,6 @@ function VerifyToken() {
    useEffect(()=> {
       verify()
    }, [])
-  return (
-      
-  )
 }
 
 export default VerifyToken

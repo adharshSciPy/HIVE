@@ -64,7 +64,6 @@ function StudentPage() {
   function getAllPost() {
     axios.get(`http://localhost:5000/student/getAllPosts/${userID}`).then((res) => {
       setCards(res.data.posts);
-      console.log(res.data.posts);
     });
   }
   React.useEffect(() => {
@@ -72,10 +71,8 @@ function StudentPage() {
   }, []);
 
   const handleApply = (id) => {
-    console.log(id)
     axios.post(`http://localhost:5000/student/applyPost/${id}/${userID}`)
       .then((res) => {
-        console.log(res)
         toast.success(res.data.message, {
           position: toast.POSITION.TOP_CENTER,
         });

@@ -120,7 +120,6 @@ export default function SignIn() {
             }
           }, 2000);
 
-          console.log(res);
         })
         .catch((err) => {
           // console.log(err.response.data.message)
