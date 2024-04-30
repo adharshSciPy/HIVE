@@ -92,7 +92,6 @@ export default function DataTable({ handleSubmit }) {
           axios
             .put(`http://localhost:5000/public/updateStatus/${thisRow._id}`)
             .then((res) => {
-              console.log(res.data.message);
               toast.success(res.data.message, {
                 position: toast.POSITION.TOP_CENTER,
               });

@@ -30,9 +30,7 @@ function Cerificate() {
     axios
       .get(`http://localhost:5000/student/getAllCertificates/${userID}`)
       .then((res) => {
-        console.log(res.data.certificates);
         setCertificates(res.data.certificates);
-        console.log(certificates);
       });
   }, []);
 

@@ -109,7 +109,6 @@ function AdminPosts() {
           axios
             .put(`http://localhost:5000/admin/updatePost/${thisRow._id}`)
             .then((res) => {
-              console.log(res.data.message);
               toast.success(res.data.message, {
                 position: toast.POSITION.TOP_CENTER,
               });

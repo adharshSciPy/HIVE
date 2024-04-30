@@ -19,7 +19,6 @@ function AppliedPost() {
             .get(`http://localhost:5000/student/getAppliedPosts/${userID}`)
             .then((res) => {
                 setRows(res.data.posts);
-                console.log(res.data.posts);
             })
             .catch((err) => {
                 console.error(err);
