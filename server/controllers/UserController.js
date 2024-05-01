@@ -166,8 +166,7 @@ module.exports = {
         {
           fullName: fullname,
           college: college,
-          course: course,
-          dob: dob
+          course: course
         });
       if (!updateUserDetails) {
         res.status(400).json({ message: "User Id error" });

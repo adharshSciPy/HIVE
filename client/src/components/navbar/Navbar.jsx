@@ -130,7 +130,6 @@ function DrawerAppBar(props) {
   const [fullName, setFullName] = React.useState(profile?.fullname)
   const [college, setCollege] = React.useState(profile?.college)
   const [course, setCourse] = React.useState(profile?.course)
-  const [dob, setDob] = React.useState(profile?.dob)
 
   const getProfileDetails = async () => {
     await axios.get(`http://localhost:5000/student/getProfile/${userID}`)
@@ -139,7 +138,6 @@ function DrawerAppBar(props) {
         setFullName(res.data?.profile?.fullName)
         setCollege(res.data?.profile?.college)
         setCourse(res.data?.profile?.course)
-        setDob(res.data?.profile?.dob)
       })
       .catch((err) => {
         console.log(err)
@@ -181,8 +179,7 @@ function DrawerAppBar(props) {
       const response = await axios.put(`http://localhost:5000/user/updateProfile/${profile?.id}`, {
         fullname: fullName,
         college: college,
-        course: course,
-        dob: dob,
+        course: course
       })
       if (response) {
         toast.success("Profile Updated Successfully", {
@@ -258,7 +255,6 @@ function DrawerAppBar(props) {
                   <TextField variant="outlined" placeholder="fullname" size="small" onClick={() => setMobileOpen(false)} value={fullName} onChange={(e) => setFullName(e.target.value)} />
                   <TextField variant="outlined" placeholder="college" size="small" onClick={() => setMobileOpen(false)} value={college} onChange={(e) => setCollege(e.target.value)} />
                   <TextField variant="outlined" placeholder="course" size="small" onClick={() => setMobileOpen(false)} value={course} onChange={(e) => setCourse(e.target.value)} />
-                  <TextField variant="outlined" placeholder="date of birth" size="small" onClick={() => setMobileOpen(false)} value={dob} onChange={(e) => setDob(e.target.value)} />
                   <Button
                     sx={{ marginBottom: 10 }}
                     onClick={handleSaveUpdateDetails}
