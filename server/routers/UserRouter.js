@@ -11,5 +11,6 @@ router.post("/verifyToken", userController.verifyToken);
 router.post("/findAccount", userController.findAccount);
 router.put("/updatePassword/:id", userController.updatePassword);
 router.get("/getAccountWithId/:id", userController.getAccountWithID);
+router.put("/updateProfile/:id", userController.updateProfile);
 
 module.exports = router;

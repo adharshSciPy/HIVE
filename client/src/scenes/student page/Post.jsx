@@ -32,7 +32,6 @@ export default function Posts() {
   function getAllPost() {
     axios.get(`http://localhost:5000/student/getAllPosts/${userID}`).then((res) => {
       setCards(res.data.posts);
-      console.log('cc', res.data);
     });
   }
   React.useEffect(() => {

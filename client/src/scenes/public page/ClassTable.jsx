@@ -54,12 +54,10 @@ export default function DataTable({ handleSubmit }) {
               (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
             );
           // alert(JSON.stringify(thisRow))
-          console.log(thisRow._id);
 
           axios
             .delete(`http://localhost:5000/public/deleteClass/${thisRow._id}`)
             .then((res) => {
-              console.log(res.data.message);
               toast.success(res.data.message, {
                 position: toast.POSITION.TOP_CENTER,
               });
@@ -87,7 +85,6 @@ export default function DataTable({ handleSubmit }) {
               (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
             );
           // alert(JSON.stringify(thisRow))
-          console.log(thisRow._id);
 
           axios
             .put(`http://localhost:5000/public/updateStatus/${thisRow._id}`)

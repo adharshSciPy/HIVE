@@ -128,14 +128,13 @@ function DrawerAppBar(props) {
   const [isEditMode, setIsEditMode] = React.useState(false)
 
   const [fullName, setFullName] = React.useState(profile?.fullname)
-  const [college, setCollege] = React.useState('')
-  const [course, setCourse] = React.useState('')
-  const [dob, setDob] = React.useState('')
+  const [college, setCollege] = React.useState(profile?.college)
+  const [course, setCourse] = React.useState(profile?.course)
+  const [dob, setDob] = React.useState(profile?.dob)
 
-  React.useEffect(() => {
-    axios.get(`http://localhost:5000/student/getProfile/${userID}`)
+  const getProfileDetails = async () => {
+    await axios.get(`http://localhost:5000/student/getProfile/${userID}`)
       .then((res) => {
-        console.log('res', res)
         setProfile(res.data.profile)
         setFullName(res.data?.profile?.fullName)
         setCollege(res.data?.profile?.college)
@@ -145,7 +144,12 @@ function DrawerAppBar(props) {
       .catch((err) => {
         console.log(err)
       })
-  }, [role === "student"])
+  }
+
+  React.useEffect(() => {
+    if (role === "student")
+      getProfileDetails()
+  }, [role])
 
   // const Token = Cookies.get('Token')
   const handleLogout = () => {
@@ -169,10 +173,30 @@ function DrawerAppBar(props) {
     setMobileOpen(false)
     setIsEditMode(true)
   }
-  const handleSaveUpdateDetails = (e) => {
+  const handleSaveUpdateDetails = async (e) => {
     e.preventDefault()
     setMobileOpen(false)
-    setIsEditMode(false)
+
+    try {
+      const response = await axios.put(`http://localhost:5000/user/updateProfile/${profile?.id}`, {
+        fullname: fullName,
+        college: college,
+        course: course,
+        dob: dob,
+      })
+      if (response) {
+        toast.success("Profile Updated Successfully", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        getProfileDetails()
+        setIsEditMode(false)
+      }
+    }
+
+    catch (err) {
+      throw err;
+    }
+
   }
 
   const drawer = (
@@ -214,7 +238,7 @@ function DrawerAppBar(props) {
             !isEditMode ?
               <>
                 <Typography variant="body1" color="primary" sx={{ fontWeight: 500 }}>
-                  {userName}
+                  {profile?.fullName}
                 </Typography>
                 <Typography variant="caption" sx={{ fontWeight: 500 }}>
                   {profile?.college}
@@ -232,9 +256,9 @@ function DrawerAppBar(props) {
               <>
                 <Stack gap={1}>
                   <TextField variant="outlined" placeholder="fullname" size="small" onClick={() => setMobileOpen(false)} value={fullName} onChange={(e) => setFullName(e.target.value)} />
-                  <TextField variant="outlined" placeholder="college" size="small" onClick={() => setMobileOpen(false)} value={profile?.college} onChange={(e) => setCollege(e.target.value)} />
-                  <TextField variant="outlined" placeholder="course" size="small" onClick={() => setMobileOpen(false)} value={profile?.course} onChange={(e) => setCourse(e.target.value)} />
-                  <TextField variant="outlined" placeholder="date of birth" size="small" onClick={() => setMobileOpen(false)} value={profile?.dob} onChange={(e) => setDob(e.target.value)} />
+                  <TextField variant="outlined" placeholder="college" size="small" onClick={() => setMobileOpen(false)} value={college} onChange={(e) => setCollege(e.target.value)} />
+                  <TextField variant="outlined" placeholder="course" size="small" onClick={() => setMobileOpen(false)} value={course} onChange={(e) => setCourse(e.target.value)} />
+                  <TextField variant="outlined" placeholder="date of birth" size="small" onClick={() => setMobileOpen(false)} value={dob} onChange={(e) => setDob(e.target.value)} />
                   <Button
                     sx={{ marginBottom: 10 }}
                     onClick={handleSaveUpdateDetails}

@@ -26,7 +26,6 @@ function AppliedPost() {
     }
     React.useEffect(() => {
         setRow();
-        console.log(userID)
     }, []);
 
     // defining coloumns

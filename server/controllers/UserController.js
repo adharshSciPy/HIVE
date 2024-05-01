@@ -30,7 +30,6 @@ module.exports = {
       });
       return res.status(200).json({ message: "Account Created" });
     } catch (err) {
-      console.log(`Server Error ${err}`);
       return res.status(500).json({ message: "Server Error" });
     }
   },
@@ -154,6 +153,30 @@ module.exports = {
       res.status(200).json({ message: "User found", user });
     } catch (err) {
       res.status(500).json({ message: "User Found" });
+    }
+  },
+
+  updateProfile: async (req, res) => {
+    const { id } = req.params;
+    const { fullname, college, course, dob } = req.body;
+
+    try {
+      const updateUserDetails = await User.findByIdAndUpdate(
+        id,
+        {
+          fullName: fullname,
+          college: college,
+          course: course,
+          dob: dob
+        });
+      if (!updateUserDetails) {
+        res.status(400).json({ message: "User Id error" });
+      }
+      else {
+        res.status(200).json({ message: "Profile Updated Succesfully" });
+      }
+    } catch (err) {
+      res.status(500).json({ message: "Internal Server Error" });
     }
   },
 };

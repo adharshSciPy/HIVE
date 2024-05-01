@@ -52,8 +52,6 @@ export default function DataTable({ handleSubmit }) {
             .forEach(
               (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
             );
-          // alert(JSON.stringify(thisRow))
-          console.log(thisRow._id);
 
           axios
             .delete(`http://localhost:5000/public/deletePost/${thisRow._id}`)

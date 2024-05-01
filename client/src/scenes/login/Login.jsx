@@ -74,7 +74,6 @@ export default function SignIn() {
     const errors = validateFormData(formData);
     setFormErrors(errors)
     if (Object.keys(errors).length === 0) {
-      console.log('No errors')
 
       axios
         .post("http://localhost:5000/user/login", {

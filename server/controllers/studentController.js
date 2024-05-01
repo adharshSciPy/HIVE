@@ -170,6 +170,7 @@ module.exports = {
       const student = await UserSchema.find({ _id: idString })
 
       const profile = {
+        id: student[0].id,
         fullName: student[0].fullName,
         college: student[0].college,
         course: student[0].course,

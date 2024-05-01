@@ -14,7 +14,6 @@ function VerifyToken() {
       .then((res) => {
          navigate('/')
       }).catch((err)=> {
-         console.log(`Verification Error ${err}`)
          Cookies.remove(Token)
          navigate('/login')
       })

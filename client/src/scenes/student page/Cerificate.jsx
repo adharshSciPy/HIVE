@@ -37,8 +37,6 @@ function Cerificate() {
   // download pdf
   const handleDownload = async (item) => {
     try {
-      console.log(item._id);
-      console.log(item.title);
       const res = await fetch(
         `http://localhost:5000/public/downloadPdf/${item._id}`
       );
