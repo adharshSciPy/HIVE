@@ -108,7 +108,6 @@ export default function NewPost() {
     data.append("date", date);
     data.append("time", time);
     data.append("time", time2);
-    console.log(data);
 
     axios
       .post("http://localhost:5000/public/post", data)

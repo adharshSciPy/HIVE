@@ -22,7 +22,6 @@ export default function ControlledAccordions() {
   const getData = async () => {
     await axios.get(`http://localhost:5000/student/getAllCertificates/${userID}`)
       .then((res) => {
-        console.log('response1', res)
         setCertificates(res.data.certificates)
       })
   }
@@ -94,7 +93,6 @@ export default function ControlledAccordions() {
 
   const handleView = async (item) => {
     try {
-      console.log(item);
       const res = await fetch(
         `http://localhost:5000/public/viewClassPdf/${item._id}`
       );

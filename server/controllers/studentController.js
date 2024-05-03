@@ -45,7 +45,7 @@ module.exports = {
   getAllPost: async (req, res) => {
     const { userId } = req.params
     try {
-      const today = new Date();
+      const today = new Date().toISOString();
       const query = {
         status: true,
         date: { $gte: today },

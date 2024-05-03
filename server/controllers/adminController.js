@@ -41,7 +41,7 @@ module.exports = {
   },
 
   getPostsHistory: async (req, res) => {
-    const postLists = await PostSchema.find();
+    const postLists = await PostSchema.find({ status: true });
 
     try {
       if (!postLists) {
@@ -86,26 +86,25 @@ module.exports = {
   },
 
   updatePost: async (req, res) => {
-    const { _id } = req.params.id
+    const postId = req.params.id;
 
     try {
-      const updateApi = await PostSchema.updateOne(
-        { _id: req.params.id },
+      const updateResult = await PostSchema.updateOne(
+        { _id: postId },
         { status: true }
-      )
+      );
 
-      if (!updateApi) {
-        res.status(400).json({ message: 'Failed to update' })
+      if (updateResult.nModified === 0) {
+        return res.status(404).json({ message: 'Post not found or already approved' });
       }
 
-      res.status(200).json({ message: 'Post Approved Succesfully' })
+      return res.status(200).json({ message: 'Post approved successfully' });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Server Error' });
     }
-
-    catch (err) {
-      res.status(500).json({ message: 'Server Error' })
-    }
-
   },
+
 
   deleteStudent: async (req, res) => {
     const { _id } = req.params.id;

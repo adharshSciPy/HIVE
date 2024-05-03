@@ -30,7 +30,7 @@ module.exports = {
   },
 
   getScheduledClass: async (req, res) => {
-    const { _id } = req.params.id;
+
     const ScheduledClass = await ScheduleSchema.find({
       ownerID: req.params.id,
       status: true,
@@ -108,11 +108,10 @@ module.exports = {
   },
 
   updateStatus: async (req, res) => {
-    const { _id } = req.params.id;
-    const { status } = req.body;
+    const { id } = req.params;
     const updateApi = await ScheduleSchema.updateOne(
-      { _id: req.params.id },
-      { status: false }
+      { _id: id },
+      { status: true }
     );
 
     try {

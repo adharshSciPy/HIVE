@@ -30,7 +30,7 @@ const PostSchema = new Schema({
   },
 
   date: {
-    type: Date,
+    type: String,
   },
 
   meetLink: {
