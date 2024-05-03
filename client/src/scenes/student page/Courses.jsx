@@ -22,12 +22,13 @@ export default function ControlledAccordions() {
   const getData = async () => {
     await axios.get(`http://localhost:5000/student/getAllCertificates/${userID}`)
       .then((res) => {
+        console.log('response1', res)
         setCertificates(res.data.certificates)
       })
   }
   React.useEffect(() => {
     getData()
-  }, [])
+  }, [userID])
 
   const dispatch = useDispatch();
   function levelSetter() {
@@ -54,7 +55,7 @@ export default function ControlledAccordions() {
 
   React.useEffect(() => {
     levelSetter()
-  }, [getData()])
+  }, [certificates])
 
 
   const [publics, setPublics] = React.useState([]);

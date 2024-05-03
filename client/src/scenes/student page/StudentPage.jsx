@@ -25,6 +25,7 @@ function StudentPage() {
   const getData = async () => {
     await axios.get(`http://localhost:5000/student/getAllCertificates/${userID}`)
       .then((res) => {
+        console.log('response', res)
         setCertificates(res.data.certificates)
       })
   }
